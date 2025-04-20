@@ -1,10 +1,21 @@
 package br.ufrn.imd.cbm.model;
+import jakarta.persistence.*;
 
+import java.util.List;
+
+@Entity
+@Table (name = "recipes")
 public class Recipe {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column (nullable = false)
     private String name;
-    private Ingredient[] ingredients;
-    private double cost;
+    @OneToMany //Note: OneToMany não aceita arrays.
+    @Column (nullable = false)
+    private List<Ingredient> ingredients;
+    @Column (nullable = false)
+    private double cost; //não seria essa derivada? ou isso é o preço a ser apresentado ao cliente? - Artur
 
     public Long getId() {
         return id;
@@ -22,11 +33,11 @@ public class Recipe {
         this.name = name;
     }
 
-    public Ingredient[] getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Ingredient[] ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 

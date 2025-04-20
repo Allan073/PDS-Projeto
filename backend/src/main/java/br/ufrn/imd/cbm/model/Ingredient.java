@@ -1,8 +1,17 @@
 package br.ufrn.imd.cbm.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table (name = "ingredients")
 public class Ingredient {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Item item;
+    @OneToOne
+    private Item item; //"Ingredient" não existe no diagrama que eu tô olhando agora então me avisa se isso tá errado - Artur
+    @Column (nullable = false)
     private double quantity;
 
     public Long getId() {

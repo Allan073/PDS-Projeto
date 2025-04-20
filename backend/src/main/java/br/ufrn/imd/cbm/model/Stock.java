@@ -1,9 +1,20 @@
 package br.ufrn.imd.cbm.model;
 
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name="stock")
 public class Stock {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable=false) //supondo que isso é a quantidade total de itens, não seria melhor fazer disso um derivado?
     private int quantityItems;
-    private Item[] items;
+    @OneToMany //Mesma coisa que eu falei sobre arrays em Recipe
+    @Column(nullable=false)
+    private List<Item> items;
 
     public Long getId() {
         return id;
@@ -21,11 +32,11 @@ public class Stock {
         this.quantityItems = quantityItems;
     }
 
-    public Item[] getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(Item[] items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 }

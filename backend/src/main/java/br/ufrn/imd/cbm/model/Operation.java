@@ -2,13 +2,23 @@ package br.ufrn.imd.cbm.model;
 
 import br.ufrn.imd.cbm.enums.FinancialMovement;
 
+import jakarta.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table (name = "operations")
 public class Operation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private FinancialMovement type;
+    @Column(nullable = false)
+    //Por via de dúvidas, existe algum motivo pra a gente tar usando column pra os tipos e
     private Date date;
+    @Column
     private String description;
+    @Column(nullable = false)
     private double amount;
 
     public Long getId() {
