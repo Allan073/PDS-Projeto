@@ -4,6 +4,8 @@ import br.ufrn.imd.cbm.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+//import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -23,6 +25,14 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    /*
+    //Dado que a gente tem "user" no lugar de cliente eu vou colocar os endereços aqui com um comentário e se precisar
+    //cortar é só remover
+    @OneToMany
+    @Column(nullable = false)
+    private List<Address> address;*/
+
 
     public Long getId() {
         return id;
@@ -63,4 +73,13 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    /*public List<Address> getAddress() {
+        return address;
+    }
+
+    public void setAddress(List<Address> address) {
+        this.address = address;
+    }*/
+
 }

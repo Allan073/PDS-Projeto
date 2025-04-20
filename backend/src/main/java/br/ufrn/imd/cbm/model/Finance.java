@@ -1,10 +1,22 @@
 package br.ufrn.imd.cbm.model;
 
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table (name="finance")
 public class Finance {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Operation[] operations;
+    @OneToMany
+    private List<Operation> operations;
+    @Column(nullable = false)
     private Double total;
+    @Column(nullable = false)
     private Double totalIncome;
+    @Column(nullable = false)
     private Double totalExpense;
 
     public Long getId() {
@@ -15,11 +27,11 @@ public class Finance {
         this.id = id;
     }
 
-    public Operation[] getOperations() {
+    public List<Operation> getOperations() {
         return operations;
     }
 
-    public void setOperations(Operation[] operations) {
+    public void setOperations(List<Operation> operations) {
         this.operations = operations;
     }
 
