@@ -1,13 +1,20 @@
-package br.ufrn.imd.cbm.model;
+package br.ufrn.imd.cbm.models;
 
-import br.ufrn.imd.cbm.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-//import java.util.List;
+import java.util.List;
 
-@Entity
 @Table(name = "users")
+@Entity(name = "User")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
 public class User {
 
     @Id
@@ -23,8 +30,11 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name="users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"))
+    private List<Role> roles;
 
     /*
     //Dado que a gente tem "user" no lugar de cliente eu vou colocar os endereços aqui com um comentário e se precisar
@@ -66,12 +76,12 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     /*public List<Address> getAddress() {

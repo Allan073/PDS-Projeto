@@ -1,4 +1,4 @@
-package br.ufrn.imd.cbm.model;
+package br.ufrn.imd.cbm.models;
 import jakarta.persistence.*;
 
 import java.util.List;
