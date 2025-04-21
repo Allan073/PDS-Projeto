@@ -3,6 +3,7 @@ package br.ufrn.imd.cbm.controllers;
 import br.ufrn.imd.cbm.dtos.CreateUserDto;
 import br.ufrn.imd.cbm.dtos.LoginUserDto;
 import br.ufrn.imd.cbm.dtos.RecoveryJwtTokenDto;
+import br.ufrn.imd.cbm.models.User;
 import br.ufrn.imd.cbm.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,18 @@ public class UserController {
     @GetMapping("/test/administrator")
     public ResponseEntity<String> getAdminAuthenticationTest() {
         return new ResponseEntity<>("Administrador autenticado com sucesso", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id){
+        User user = userService.findUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @GetMapping("/find-by-email")
+    public ResponseEntity<User> findUserByEmail(@RequestParam String email){
+        User user = userService.findUserByEmail(email);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
 }
