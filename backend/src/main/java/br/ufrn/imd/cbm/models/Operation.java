@@ -3,10 +3,19 @@ package br.ufrn.imd.cbm.models;
 import br.ufrn.imd.cbm.enums.FinancialMovement;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 @Entity
 @Table (name = "operations")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
 public class Operation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -41,7 +41,8 @@ public class SecurityConfiguration {
     public static final String [] ENDPOINTS_ADMIN = {
             "/users/test/administrator",
             "/users/{id}",
-            "/users/find-by-email"
+            "/users/find-by-email",
+            "/transactions/**"
     };
 
     @Bean

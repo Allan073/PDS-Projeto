@@ -17,7 +17,6 @@ import java.util.List;
 
 @Service
 public class UserService {
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -46,7 +45,6 @@ public class UserService {
         return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
     }
 
-    // Método responsável por criar um usuário
     public void createUser(CreateUserDto createUserDto) {
 
         User newUser = User.builder()
