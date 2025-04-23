@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/transactions")
 public class OperationController {
@@ -24,5 +26,11 @@ public class OperationController {
     public ResponseEntity<Operation> getOperationById(@PathVariable Long id) {
         Operation operation = operationService.findOperationById(id);
         return ResponseEntity.status(HttpStatus.OK).body(operation);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Operation>> getAllOperations() {
+        List<Operation> operations = operationService.findAllOperations();
+        return ResponseEntity.status(HttpStatus.OK).body(operations);
     }
 }

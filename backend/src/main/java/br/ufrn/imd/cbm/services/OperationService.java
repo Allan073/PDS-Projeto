@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class OperationService {
@@ -28,5 +29,9 @@ public class OperationService {
     public Operation findOperationById(Long id) {
         return operationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+    }
+
+    public List<Operation> findAllOperations() {
+        return operationRepository.findAll();
     }
 }

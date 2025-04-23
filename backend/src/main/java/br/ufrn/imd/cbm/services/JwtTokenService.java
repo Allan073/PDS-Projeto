@@ -12,7 +12,6 @@ import java.time.ZonedDateTime;
 
 @Service
 public class JwtTokenService {
-    //É pra isso ficar no repo público mesmo? - Artur
     private static final String SECRET_KEY = "v$vI?9{;c#5(f6Z{3O7X)klm=CHn5{~0";
 
     private static final String ISSUER = "cbm-api";

@@ -1,9 +1,17 @@
 package br.ufrn.imd.cbm.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table (name = "items")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
 public class Item extends AbstractEntity{
     @Column(nullable = false)
     private String name;
