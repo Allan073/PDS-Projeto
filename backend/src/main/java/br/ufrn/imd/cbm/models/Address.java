@@ -3,10 +3,7 @@ package br.ufrn.imd.cbm.models;
 import jakarta.persistence.*;
 
 @Entity
-public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Address extends AbstractEntity{
     @Column(nullable = false)
     private String street;
     @Column
@@ -14,13 +11,6 @@ public class Address {
     @Column(nullable = false)
     private int number;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getStreet() {
         return street;

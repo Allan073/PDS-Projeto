@@ -58,6 +58,8 @@ public class SecurityConfiguration {
                 .and().addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+    //eu não vou tocar nisso mas eu vou só ressaltar que o intellij olhou essa função e deu 5 erros porque
+    //"csrf()","sessionManagement()","and()" e "authorizeHttpRequests()" são depreciados.
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

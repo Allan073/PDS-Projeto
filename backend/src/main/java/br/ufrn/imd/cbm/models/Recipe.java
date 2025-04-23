@@ -5,10 +5,8 @@ import java.util.List;
 
 @Entity
 @Table (name = "recipes")
-public class Recipe {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Recipe extends AbstractEntity {
+
     @Column (nullable = false)
     private String name;
     @OneToMany //Note: OneToMany não aceita arrays.
@@ -17,13 +15,6 @@ public class Recipe {
     @Column (nullable = false)
     private double cost; //não seria essa derivada? ou isso é o preço a ser apresentado ao cliente? - Artur
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

@@ -6,23 +6,14 @@ import java.util.List;
 
 @Entity
 @Table(name="stock")
-public class Stock {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Stock extends AbstractEntity{
+
     @Column(nullable=false) //supondo que isso é a quantidade total de itens, não seria melhor fazer disso um derivado?
     private int quantityItems;
     @OneToMany //Mesma coisa que eu falei sobre arrays em Recipe
     @Column(nullable=false)
     private List<Item> items;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public int getQuantityItems() {
         return quantityItems;

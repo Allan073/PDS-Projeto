@@ -6,10 +6,7 @@ import java.util.List;
 
 @Entity
 @Table (name="finance")
-public class Finance {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Finance extends AbstractEntity{
     @OneToMany
     private List<Operation> operations;
     @Column(nullable = false)
@@ -18,14 +15,6 @@ public class Finance {
     private Double totalIncome;
     @Column(nullable = false)
     private Double totalExpense;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public List<Operation> getOperations() {
         return operations;

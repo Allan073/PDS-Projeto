@@ -6,6 +6,6 @@ public record CreateUserDto(
         String name,
         String email,
         String password,
-        RoleName role
+        RoleName role //Isso não deveria ser list?
 ) {
 }

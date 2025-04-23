@@ -16,10 +16,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Operation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Operation extends AbstractEntity {
+
     @Enumerated(EnumType.STRING)
     private FinancialMovement type;
     @Column(nullable = false)
@@ -29,14 +27,6 @@ public class Operation {
     private String description;
     @Column(nullable = false)
     private double amount;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public FinancialMovement getType() {
         return type;
