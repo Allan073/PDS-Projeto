@@ -1,10 +1,16 @@
 package br.ufrn.imd.cbm.models;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table (name = "recipes")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Recipe extends AbstractEntity {
 
     @Column (nullable = false)
