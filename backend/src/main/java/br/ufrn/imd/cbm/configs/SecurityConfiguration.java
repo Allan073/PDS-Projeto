@@ -43,7 +43,8 @@ public class SecurityConfiguration {
             "/users/{id}",
             "/users/find-by-email",
             "/transactions/**",
-            "/items/**"
+            "/items/**",
+            "/recipes/**"
     };
 
     @Bean
