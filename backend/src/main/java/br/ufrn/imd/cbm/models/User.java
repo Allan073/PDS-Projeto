@@ -34,12 +34,6 @@ public class User extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
 
-    /*
-    //Dado que a gente tem "user" no lugar de cliente eu vou colocar os endereços aqui com um comentário e se precisar
-    //cortar é só remover
-    @OneToMany
-    @Column(nullable = false)
-    private List<Address> address;*/
 
 
     public String getName() {
@@ -73,13 +67,5 @@ public class User extends AbstractEntity {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-
-    /*public List<Address> getAddress() {
-        return address;
-    }
-
-    public void setAddress(List<Address> address) {
-        this.address = address;
-    }*/
 
 }
