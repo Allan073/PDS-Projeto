@@ -66,4 +66,20 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email não encontrado"));
     }
+
+    public void updateUserById(Long id, CreateUserDto createUserDto) {
+        User user = findUserById(id);
+        if (user == null) {
+            throw new RuntimeException("Usuário não encontrado");
+        }
+        if (createUserDto.name() != null) user.setName(createUserDto.name());
+        if (createUserDto.email() != null) user.setEmail(createUserDto.email());
+        if (createUserDto.password() != null) user.setPassword(securityConfiguration.passwordEncoder().encode(createUserDto.password()));
+        if (createUserDto.role() != null) user.setRoles(List.of(Role.builder().name(createUserDto.role()).build()));
+        userRepository.save(user);
+    }
+
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
 }

@@ -1,6 +1,6 @@
 package br.ufrn.imd.cbm.dtos;
 
-import br.ufrn.imd.cbm.models.Ingredient;
+import br.ufrn.imd.cbm.models.Item;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
 public record CreateRecipeDTO(
         String name,
         Double cost,
-        List<Ingredient> ingredients
+        List<Item> items
 ) {
 
 }

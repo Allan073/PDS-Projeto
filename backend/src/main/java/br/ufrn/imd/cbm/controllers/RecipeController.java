@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/recipes")
 public class RecipeController {
@@ -26,14 +28,19 @@ public class RecipeController {
         return ResponseEntity.status(HttpStatus.OK).body(recipe);
     }
 
-    /*@PostMapping("/{id}")
-    public ResponseEntity<Void> updateRecipeById(@PathVariable Long id, @RequestBody CreateRecipeDTO createRecipeDTO) {
+    @PostMapping("/{id}")
+    public ResponseEntity<String> updateRecipeById(@PathVariable Long id, @RequestBody CreateRecipeDTO createRecipeDTO) {
         recipeService.updateRecipe(id,createRecipeDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }*/
+        return new ResponseEntity<>("Receita atualizada com sucesso",HttpStatus.OK);
+    }
 
-    @DeleteMapping("/{id}") public ResponseEntity<Void> deleteRecipeById(@PathVariable Long id) {
+    @DeleteMapping("/{id}") public ResponseEntity<String> deleteRecipeById(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Receita deletada com sucesso",HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/all") public ResponseEntity<List<Recipe>> getAllRecipes() {
+        List<Recipe> recipes = recipeService.findAllRecipes();
+        return ResponseEntity.status(HttpStatus.OK).body(recipes);
     }
 }

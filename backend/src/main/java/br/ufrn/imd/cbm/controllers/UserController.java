@@ -55,4 +55,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<String> updateUserById(@PathVariable Long id, @RequestBody CreateUserDto user){
+        userService.updateUserById(id,user);
+        return new ResponseEntity<>("User atualizado com sucesso", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id){
+        userService.deleteUserById(id);
+        return new ResponseEntity<>("User deletado com sucesso", HttpStatus.OK);
+    }
 }

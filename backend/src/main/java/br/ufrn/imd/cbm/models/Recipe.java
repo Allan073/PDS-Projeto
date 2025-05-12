@@ -17,7 +17,7 @@ public class Recipe extends AbstractEntity {
     private String name;
     @OneToMany //Note: OneToMany não aceita arrays.
     @Column (nullable = false)
-    private List<Ingredient> ingredients;
+    private List<Item> items;
     @Column (nullable = false)
     private double cost; //não seria essa derivada? ou isso é o preço a ser apresentado ao cliente? - Artur
 
@@ -30,12 +30,12 @@ public class Recipe extends AbstractEntity {
         this.name = name;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     public double getCost() {
