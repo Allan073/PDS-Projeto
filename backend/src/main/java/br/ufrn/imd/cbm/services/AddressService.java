@@ -5,6 +5,7 @@ import br.ufrn.imd.cbm.models.Address;
 import br.ufrn.imd.cbm.repositories.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
-    public void createAddress(Long userId, AddressDTO AddressDTO) {
+    public void createAddress(AddressDTO AddressDTO) {
         Address newAddress = Address.builder()
-                .user(userService.findUserById(userId))
+                .user(userService.findUserById(AddressDTO.userId()))
                 .street(AddressDTO.street())
                 .number(AddressDTO.number())
                 .complement(AddressDTO.complement())
@@ -25,9 +26,9 @@ public class AddressService {
         addressRepository.save(newAddress);
     }
 
-    public Address findAddressById(Long userId, Long addressId) {
+    public Address findAddressById(Long addressId, AddressDTO AddressDTO) {
         Address address = addressRepository.findById(addressId).orElseThrow(() -> new RuntimeException("Endereço não encontrado!"));
-        if (address.getUser().getId().equals(userId)) {
+        if (address.getUser().getId().equals(AddressDTO.userId())) {
             return address;
         }
         else {
@@ -35,21 +36,22 @@ public class AddressService {
         }
     }
 
-    public void updateAddress(Long userId, Long addressId, AddressDTO AddressDTO) {
-        Address updatingaddress = findAddressById(userId,addressId);
+    public void updateAddress(Long addressId, AddressDTO AddressDTO) {
+        Address updatingaddress = findAddressById(addressId, AddressDTO);
+        if (AddressDTO.userId() != null) updatingaddress.setUser(userService.findUserById(AddressDTO.userId()));
         if (AddressDTO.street() != null) updatingaddress.setStreet(AddressDTO.street());
         if (AddressDTO.number() != null) updatingaddress.setNumber(AddressDTO.number());
         if (AddressDTO.complement() != null) updatingaddress.setComplement(AddressDTO.complement());
         addressRepository.save(updatingaddress);
     }
 
-    public void deleteAddress(Long userId, Long addressId) {
-        Address address = findAddressById(userId, addressId);
+    public void deleteAddress(Long addressId, AddressDTO AddressDTO) {
+        Address address = findAddressById(addressId, AddressDTO);
         addressRepository.deleteById(addressId);
     }
 
-    public List<Address> findAllUserAddresses(Long userId) {
-        return addressRepository.findByUser_Id(userId)
+    public List<Address> findAllUserAddresses(AddressDTO AddressDTO) {
+        return addressRepository.findByUser_Id(AddressDTO.userId())
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 

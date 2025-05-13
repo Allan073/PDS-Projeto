@@ -15,9 +15,9 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public void createOrder(Long userId, OrderDTO OrderDTO) {
+    public void createOrder(OrderDTO OrderDTO) {
         Order newOrder = Order.builder()
-                .user(userService.findUserById(userId))
+                .user(userService.findUserById(OrderDTO.userId()))
                 .orderDate(OrderDTO.orderDate())
                 .description(OrderDTO.description())
                 .orderState(OrderDTO.orderState())
@@ -26,7 +26,11 @@ public class OrderService {
         orderRepository.save(newOrder);
     }
 
-    public Order findOrderById(Long userId, Long orderId) {
+    public Order findOrderById_DTO(Long orderId, OrderDTO OrderDTO) {
+        return findOrderById_User(orderId,OrderDTO.userId());
+    }
+
+    public Order findOrderById_User(Long orderId, Long userId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Endereço não encontrado!"));
         if (order.getUser().getId().equals(userId)) {
             return order;
@@ -36,8 +40,12 @@ public class OrderService {
         }
     }
 
-    public void updateOrder(Long userId, Long orderId, OrderDTO OrderDTO) {
-        Order updatingorder = findOrderById(userId,orderId);
+    public Order findOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Endereço não encontrado!"));
+    }
+
+    public void updateOrder(Long orderId, OrderDTO OrderDTO) {
+        Order updatingorder = findOrderById_DTO(orderId, OrderDTO);
         if (OrderDTO.orderDate() != null) updatingorder.setOrderDate(OrderDTO.orderDate());
         if (OrderDTO.description() != null) updatingorder.setDescription(OrderDTO.description());
         if (OrderDTO.orderState() != null) updatingorder.setOrderState(OrderDTO.orderState());
@@ -45,13 +53,13 @@ public class OrderService {
         orderRepository.save(updatingorder);
     }
 
-    public void deleteOrder(Long userId, Long orderId) {
-        Order order = findOrderById(userId, orderId);
+    public void deleteOrder(Long orderId, OrderDTO OrderDTO) {
+        Order order = findOrderById_DTO(orderId, OrderDTO);
         orderRepository.deleteById(orderId);
     }
 
-    public List<Order> findAllUserOrders(Long userId) {
-        return orderRepository.findByUser_Id(userId)
+    public List<Order> findAllUserOrders(OrderDTO OrderDTO) {
+        return orderRepository.findByUser_Id(OrderDTO.userId())
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 

@@ -11,43 +11,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{userId}/orders")
+@RequestMapping("/orders")
 public class OrderController {
     @Autowired
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@PathVariable Long userId, @RequestBody OrderDTO order) {
-        orderService.createOrder(userId,order);
+    public ResponseEntity<Void> createOrder(@RequestBody OrderDTO order) {
+        orderService.createOrder(order);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long userId, @PathVariable Long orderId) {
-        Order order = orderService.findOrderById(userId, orderId);
+    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId, @RequestBody OrderDTO OrderDTO) {
+        Order order = orderService.findOrderById_DTO(orderId, OrderDTO);
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
     @PostMapping("/{orderId}")
-    public ResponseEntity<String> updateOrderById(@PathVariable Long userId, @PathVariable Long orderId, @RequestBody OrderDTO OrderDTO) {
-        orderService.updateOrder(userId,orderId,OrderDTO);
+    public ResponseEntity<String> updateOrderById(@PathVariable Long orderId, @RequestBody OrderDTO OrderDTO) {
+        orderService.updateOrder(orderId,OrderDTO);
         return new ResponseEntity<>("Pedido atualizado com sucesso",HttpStatus.OK);
     }
 
-    @DeleteMapping("/{orderId}") public ResponseEntity<String> deleteOrderById(@PathVariable Long userId, @PathVariable Long orderId) {
-        orderService.deleteOrder(userId,orderId);
+    @DeleteMapping("/{orderId}") public ResponseEntity<String> deleteOrderById(@PathVariable Long orderId, @RequestBody OrderDTO order) {
+        orderService.deleteOrder(orderId, order);
         return new ResponseEntity<>("Pedido apagado com sucesso",HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/all") public ResponseEntity<List<Order>> getAllUserOrders(@PathVariable Long userId) {
-        List<Order> orders = orderService.findAllUserOrders(userId);
+    @GetMapping("/alluser") public ResponseEntity<List<Order>> getAllUserOrders(@RequestBody OrderDTO order) {
+        List<Order> orders = orderService.findAllUserOrders(order);
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
-    /*@RequestMapping("/orders") //talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
-    //outra classe depois
     @GetMapping("/all")
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.findAllOrders();
         return ResponseEntity.status(HttpStatus.OK).body(orders);
-    }*/
+    }
 }

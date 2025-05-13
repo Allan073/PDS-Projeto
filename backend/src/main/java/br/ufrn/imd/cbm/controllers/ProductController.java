@@ -11,54 +11,46 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{userId}/orders/{orderId}/products")
+@RequestMapping("/products")
 public class ProductController {
     @Autowired
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@PathVariable Long userId, @PathVariable Long orderId,
-                                              @RequestBody ProductDTO product) {
-        productService.createProduct(userId,orderId,product);
+    public ResponseEntity<Void> createProduct(@RequestBody ProductDTO product) {
+        productService.createProduct(product);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long userId, @PathVariable Long orderId,
-                                                  @PathVariable Long productId) {
-        Product product = productService.findProductById(userId,orderId, productId);
+    public ResponseEntity<Product> getProductById(@PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
+        Product product = productService.findProductById(productId, ProductDTO);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<String> updateProductById(@PathVariable Long userId, @PathVariable Long orderId,
-                                                    @PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
-        productService.updateProduct(userId,orderId,productId,ProductDTO);
+    public ResponseEntity<String> updateProductById(@PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
+        productService.updateProduct(productId,ProductDTO);
         return new ResponseEntity<>("Endereço com sucesso",HttpStatus.OK);
     }
 
-    @DeleteMapping("/{productId}") public ResponseEntity<String> deleteProductById(@PathVariable Long userId,
-                                                                                   @PathVariable Long orderId,
-                                                                                   @PathVariable Long productId) {
-        productService.deleteProduct(userId,orderId,productId);
+    @DeleteMapping("/{productId}") public ResponseEntity<String> deleteProductById(@PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
+        productService.deleteProduct(productId,ProductDTO);
         return new ResponseEntity<>("Endereço com sucesso",HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/all") public ResponseEntity<List<Product>> getAllOrderProducts(@PathVariable Long userId, @PathVariable Long orderId) {
-        List<Product> products = productService.findAllOrderProducts(userId,orderId);
+    @GetMapping("/allorder") public ResponseEntity<List<Product>> getAllOrderProducts(@RequestBody ProductDTO ProductDTO) {
+        List<Product> products = productService.findAllOrderProducts(ProductDTO);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    /*@RequestMapping("/users/{userId}/products")
-    @GetMapping("/all") public ResponseEntity<List<Product>> getAllUserProducts(@PathVariable Long userId) {
-        List<Product> products = productService.findAllUserProducts(userId);
+    @GetMapping("/alluser") public ResponseEntity<List<Product>> getAllUserProducts(@RequestBody ProductDTO ProductDTO) {
+        List<Product> products = productService.findAllUserProducts(ProductDTO);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    @RequestMapping("/products")//talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
-    //outra classe depois
     @GetMapping("/all")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.findAllProducts();
         return ResponseEntity.status(HttpStatus.OK).body(products);
-    }*/
+    }
 }
