@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Address extends AbstractEntity{
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, name = "userid")
     private User user;
     @Column(nullable = false)
     private String street;

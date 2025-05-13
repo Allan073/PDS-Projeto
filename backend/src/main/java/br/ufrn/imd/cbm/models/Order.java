@@ -17,6 +17,10 @@ import java.util.List;
 @Builder
 @Getter
 public class Order extends AbstractEntity {
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "user_id")
+    private User user;
+
     @Column(nullable = false)
     private Date orderDate;
 
@@ -29,8 +33,55 @@ public class Order extends AbstractEntity {
     @Column(nullable = false)
     private Double totalPrice;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     @Column(nullable = false)
     private List<Product> products;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public DeliveryState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(DeliveryState orderState) {
+        this.orderState = orderState;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 }

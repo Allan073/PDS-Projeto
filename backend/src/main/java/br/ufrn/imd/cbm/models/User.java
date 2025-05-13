@@ -33,7 +33,12 @@ public class User extends AbstractEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
-
+    @OneToMany(mappedBy = "user")
+    @Column
+    private List<Address> addresses;
+    @OneToMany(mappedBy = "user")
+    @Column
+    private List<Order> orders;
 
 
     public String getName() {
@@ -68,4 +73,19 @@ public class User extends AbstractEntity {
         this.roles = roles;
     }
 
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 }

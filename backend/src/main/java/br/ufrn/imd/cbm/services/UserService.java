@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,6 +53,8 @@ public class UserService {
                 .email(createUserDto.email())
                 .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
                 .roles(List.of(Role.builder().name(createUserDto.role()).build()))
+                .orders(new ArrayList<>())
+                .addresses(new ArrayList<>())
                 .build();
 
         userRepository.save(newUser);

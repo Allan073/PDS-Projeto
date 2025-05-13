@@ -47,7 +47,7 @@ public class AddressService {
     }
 
     public List<Address> findAllUserAddresses(Long userId) {
-        return addressRepository.findByUser(userService.findUserById(userId))
+        return addressRepository.findByUser_Id(userId)
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 
