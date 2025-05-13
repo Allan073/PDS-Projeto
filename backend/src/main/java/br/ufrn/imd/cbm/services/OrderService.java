@@ -10,9 +10,10 @@ import java.util.List;
 
 @Service
 public class OrderService {
+    @Autowired
     private UserService userService;
     @Autowired
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     public void createOrder(Long userId, OrderDTO OrderDTO) {
         Order newOrder = Order.builder()

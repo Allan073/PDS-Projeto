@@ -8,19 +8,68 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table (name = "products") //cria o repositório disso quando puder. ou talvez a gente só bota date em item e deixa nullable?
+@Table (name = "products")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class Product extends Item{
+public class Product extends AbstractEntity {
+    @Column(nullable = false)
+    private String name;
+    @Column //vou deixar como nullable por enquanto - Artur
+    private String description;
+    @Column (nullable = false)
+    private int quantity;
+    @Column (nullable = false)
+    private double price;
     @Column (nullable = false)
     private Date productionDate;
 
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "order_id")
+    private Order order;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
     public Date getProductionDate() {
         return productionDate;
     }
     public void setProductionDate(Date productionDate) {
         this.productionDate = productionDate;
+    }
+    public Order getOrder() {
+        return order;
+    }
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

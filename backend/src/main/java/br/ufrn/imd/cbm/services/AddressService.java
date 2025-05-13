@@ -10,8 +10,10 @@ import java.util.List;
 
 @Service
 public class AddressService {
+    @Autowired
     private UserService userService;
-    @Autowired AddressRepository addressRepository;
+    @Autowired
+    private AddressRepository addressRepository;
 
     public void createAddress(Long userId, AddressDTO AddressDTO) {
         Address newAddress = Address.builder()

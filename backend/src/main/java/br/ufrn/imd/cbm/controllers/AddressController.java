@@ -30,12 +30,12 @@ public class AddressController {
     @PostMapping("/{addressId}")
     public ResponseEntity<String> updateAddressById(@PathVariable Long userId, @PathVariable Long addressId, @RequestBody AddressDTO AddressDTO) {
         addressService.updateAddress(userId,addressId,AddressDTO);
-        return new ResponseEntity<>("Endereço com sucesso",HttpStatus.OK);
+        return new ResponseEntity<>("Endereço atualizado com sucesso",HttpStatus.OK);
     }
 
     @DeleteMapping("/{addressId}") public ResponseEntity<String> deleteAddressById(@PathVariable Long userId, @PathVariable Long addressId) {
         addressService.deleteAddress(userId,addressId);
-        return new ResponseEntity<>("Endereço com sucesso",HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Endereço apagado com sucesso",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all") public ResponseEntity<List<Address>> getAllUserAddresses(@PathVariable Long userId) {
@@ -43,7 +43,8 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(addresses);
     }
 
-    @RequestMapping("/address")
+    @RequestMapping("/address")//talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
+    //outra classe depois
     @GetMapping("/all")
     public ResponseEntity<List<Address>> getAllAddresses() {
         List<Address> addresses = addressService.findAllAddresses();

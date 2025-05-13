@@ -30,12 +30,12 @@ public class OrderController {
     @PostMapping("/{orderId}")
     public ResponseEntity<String> updateOrderById(@PathVariable Long userId, @PathVariable Long orderId, @RequestBody OrderDTO OrderDTO) {
         orderService.updateOrder(userId,orderId,OrderDTO);
-        return new ResponseEntity<>("Endereço com sucesso",HttpStatus.OK);
+        return new ResponseEntity<>("Pedido atualizado com sucesso",HttpStatus.OK);
     }
 
     @DeleteMapping("/{orderId}") public ResponseEntity<String> deleteOrderById(@PathVariable Long userId, @PathVariable Long orderId) {
         orderService.deleteOrder(userId,orderId);
-        return new ResponseEntity<>("Endereço com sucesso",HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Pedido apagado com sucesso",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all") public ResponseEntity<List<Order>> getAllUserOrders(@PathVariable Long userId) {
@@ -43,7 +43,8 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
-    @RequestMapping("/order")
+    @RequestMapping("/orders") //talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
+    //outra classe depois
     @GetMapping("/all")
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.findAllOrders();
