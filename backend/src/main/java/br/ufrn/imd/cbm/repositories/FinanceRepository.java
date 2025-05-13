@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface FinanceRepository extends JpaRepository<Finance, Long>  {
-    
+    List<Finance> findByTipo(String Tipo);  //adicionado por Allan
 }
