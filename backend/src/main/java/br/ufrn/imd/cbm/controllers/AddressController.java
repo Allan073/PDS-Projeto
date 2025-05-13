@@ -30,12 +30,12 @@ public class AddressController {
     @PostMapping("/{addressId}")
     public ResponseEntity<String> updateAddressById(@PathVariable Long userId, @PathVariable Long addressId, @RequestBody AddressDTO AddressDTO) {
         addressService.updateAddress(userId,addressId,AddressDTO);
-        return new ResponseEntity<>("Receita atualizada com sucesso",HttpStatus.OK);
+        return new ResponseEntity<>("Endereço com sucesso",HttpStatus.OK);
     }
 
     @DeleteMapping("/{addressId}") public ResponseEntity<String> deleteAddressById(@PathVariable Long userId, @PathVariable Long addressId) {
         addressService.deleteAddress(userId,addressId);
-        return new ResponseEntity<>("Receita deletada com sucesso",HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Endereço com sucesso",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all") public ResponseEntity<List<Address>> getAllUserAddresses(@PathVariable Long userId) {
