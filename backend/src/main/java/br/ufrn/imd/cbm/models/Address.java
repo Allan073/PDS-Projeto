@@ -1,9 +1,19 @@
 package br.ufrn.imd.cbm.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Table (name = "addresses")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Address extends AbstractEntity{
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
     @Column(nullable = false)
     private String street;
     @Column
@@ -11,6 +21,12 @@ public class Address extends AbstractEntity{
     @Column(nullable = false)
     private int number;
 
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getStreet() {
         return street;

@@ -1,7 +1,6 @@
 package br.ufrn.imd.cbm.services;
 
 import br.ufrn.imd.cbm.dtos.CreateRecipeDTO;
-import br.ufrn.imd.cbm.models.Item;
 import br.ufrn.imd.cbm.models.Recipe;
 import br.ufrn.imd.cbm.repositories.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
