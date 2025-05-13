@@ -48,7 +48,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    @RequestMapping("/users/{userId}/products")
+    /*@RequestMapping("/users/{userId}/products")
     @GetMapping("/all") public ResponseEntity<List<Product>> getAllUserProducts(@PathVariable Long userId) {
         List<Product> products = productService.findAllUserProducts(userId);
         return ResponseEntity.status(HttpStatus.OK).body(products);
@@ -60,5 +60,5 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.findAllProducts();
         return ResponseEntity.status(HttpStatus.OK).body(products);
-    }
+    }*/
 }

@@ -43,11 +43,11 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
-    @RequestMapping("/orders") //talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
+    /*@RequestMapping("/orders") //talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
     //outra classe depois
     @GetMapping("/all")
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.findAllOrders();
         return ResponseEntity.status(HttpStatus.OK).body(orders);
-    }
+    }*/
 }

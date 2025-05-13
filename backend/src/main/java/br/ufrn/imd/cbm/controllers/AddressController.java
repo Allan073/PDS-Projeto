@@ -43,12 +43,12 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(addresses);
     }
 
-    @RequestMapping("/address")//talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
+    /*@RequestMapping("/address")//talvez esteja quebrado porque tem um requestmapping la encima se for o caso jogo em
     //outra classe depois
     @GetMapping("/all")
     public ResponseEntity<List<Address>> getAllAddresses() {
         List<Address> addresses = addressService.findAllAddresses();
         return ResponseEntity.status(HttpStatus.OK).body(addresses);
-    }
+    }*/
 
 }
