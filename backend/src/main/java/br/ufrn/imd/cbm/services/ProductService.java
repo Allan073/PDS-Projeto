@@ -14,22 +14,23 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private OrderService orderService;
-
+    @Autowired
+    private UserService userService;
     public void createProduct(ProductDTO ProductDTO) {
         Product newProduct = Product.builder()
-                .order(orderService.findOrderById(ProductDTO.orderId()))
+                .order(orderService.findOrderById(ProductDTO.orderid()))
                 .name(ProductDTO.name())
                 .description(ProductDTO.description())
                 .quantity(ProductDTO.quantity())
                 .price(ProductDTO.price())
-                .productionDate(ProductDTO.productionDate())
+                .productionDate(ProductDTO.productiondate())
                 .build();
         productRepository.save(newProduct);
     }
 
     public Product findProductById(Long productId, ProductDTO ProductDTO) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
-        if (orderService.findOrderById(ProductDTO.orderId()).equals(product.getOrder())) {
+        if (orderService.findOrderById(ProductDTO.orderid()).equals(product.getOrder())) {
             return product;
         }
         else {
@@ -40,12 +41,12 @@ public class ProductService {
 
     public void updateProduct(Long productId, ProductDTO ProductDTO) {
         Product updatingproduct = findProductById(productId,ProductDTO);
-        if (ProductDTO.orderId() != null) updatingproduct.setOrder(orderService.findOrderById(ProductDTO.orderId()));
+        if (ProductDTO.orderid() != null) updatingproduct.setOrder(orderService.findOrderById(ProductDTO.orderid()));
         if (ProductDTO.name() != null) updatingproduct.setName(ProductDTO.name());
         if (ProductDTO.description() != null) updatingproduct.setDescription(ProductDTO.description());
         if (ProductDTO.quantity() != null) updatingproduct.setQuantity(ProductDTO.quantity());
         if (ProductDTO.price() != null) updatingproduct.setPrice(ProductDTO.price());
-        if (ProductDTO.productionDate() != null) updatingproduct.setProductionDate(ProductDTO.productionDate());
+        if (ProductDTO.productiondate() != null) updatingproduct.setProductionDate(ProductDTO.productiondate());
         productRepository.save(updatingproduct);
     }
 
@@ -55,12 +56,12 @@ public class ProductService {
     }
 
     public List<Product> findAllOrderProducts(ProductDTO ProductDTO) {
-        return productRepository.findByOrder_Id(ProductDTO.orderId())
+        return productRepository.findByOrder_Id(ProductDTO.orderid())
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 
-    public List<Product> findAllUserProducts(ProductDTO ProductDTO) {
-        return productRepository.findByOrder_UserId(ProductDTO.userId())
+    public List<Product> findAllUserProducts(String username) {
+        return productRepository.findByOrder_UserId(userService.findUserByEmail(username).getId())
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 

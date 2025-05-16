@@ -8,6 +8,7 @@ import br.ufrn.imd.cbm.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,11 @@ public class UserController {
     @GetMapping("/test/administrator")
     public ResponseEntity<String> getAdminAuthenticationTest() {
         return new ResponseEntity<>("Administrador autenticado com sucesso", HttpStatus.OK);
+    }
+
+    @GetMapping("/test/getuser")
+    public ResponseEntity<String> getUserAuthenticationTest(@AuthenticationPrincipal String username) {
+        return ResponseEntity.status(HttpStatus.OK).body(username);
     }
 
     @GetMapping("/{id}")

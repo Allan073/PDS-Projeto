@@ -1,11 +1,16 @@
 package br.ufrn.imd.cbm.models;
 
+import br.ufrn.imd.cbm.enums.RoleName;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -15,6 +20,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class User extends AbstractEntity {
 
 
@@ -35,9 +44,11 @@ public class User extends AbstractEntity {
     private List<Role> roles;
     @OneToMany(mappedBy = "user")
     @Column
+    @JsonManagedReference
     private List<Address> addresses;
     @OneToMany(mappedBy = "user")
     @Column
+    @JsonManagedReference
     private List<Order> orders;
 
 
@@ -87,5 +98,12 @@ public class User extends AbstractEntity {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public boolean isAdmin() {
+        for (Role role : getRoles()) {
+            if (role.getName() == RoleName.ROLE_ADMINISTRATOR) return true;
+        }
+        return false;
     }
 }

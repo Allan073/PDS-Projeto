@@ -6,6 +6,7 @@ import br.ufrn.imd.cbm.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,8 +44,8 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    @GetMapping("/alluser") public ResponseEntity<List<Product>> getAllUserProducts(@RequestBody ProductDTO ProductDTO) {
-        List<Product> products = productService.findAllUserProducts(ProductDTO);
+    @GetMapping("/alluser") public ResponseEntity<List<Product>> getAllUserProducts(@AuthenticationPrincipal String username) {
+        List<Product> products = productService.findAllUserProducts(username);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 

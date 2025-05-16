@@ -1,6 +1,9 @@
 package br.ufrn.imd.cbm.models;
 
 import br.ufrn.imd.cbm.enums.DeliveryState;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,12 +19,18 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class Order extends AbstractEntity {
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
     @Column(nullable = false)
+    //@JsonSerialize(using = LocalDateTimeSerializer.class)
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date orderDate;
 
     @Column(nullable = false)
@@ -35,6 +44,7 @@ public class Order extends AbstractEntity {
 
     @OneToMany(mappedBy = "order")
     @Column(nullable = false)
+    @JsonManagedReference
     private List<Product> products;
 
     public User getUser() {

@@ -28,25 +28,33 @@ public class SecurityConfiguration {
     };
 
     // Endpoints funcionais para qualquer usuário autenticado
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-            "/users/test"
+    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = { //esse sistema me causa sofrimento
+            "/users/test",
+            "/address/{addressId}",
+            "/orders/{orderId}",
+            "/orders/",
+            "/address/",
+            "/address/**",
+            "/orders/**",
+            "/products/**",
+            "/products/",
     };
 
     // Endpoints que só podem ser acessado por usuários com permissão de cliente
     public static final String [] ENDPOINTS_CUSTOMER = {
             "/users/test/customer",
-            "/address/",
-            "/address/{id}",
-            "/orders/",
-            "/orders/{id}",
-            "/products/",
-            "/products/{id}",
+
     };
 
     // Endpoints que só podem ser acessado por usuários com permissão de administrador
     public static final String [] ENDPOINTS_ADMIN = {
             "/users/test/administrator",
+            "/users/test/getuser",
             "/users/{id}",
+            "/address/{id}",
+            "/orders/{id}",
+            "/orders/",
+            "/address/",
             "/address/**",
             "/orders/**",
             "/products/**",

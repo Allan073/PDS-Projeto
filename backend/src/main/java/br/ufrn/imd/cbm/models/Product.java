@@ -1,6 +1,10 @@
 package br.ufrn.imd.cbm.models;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class Product extends AbstractEntity {
     @Column(nullable = false)
     private String name;
@@ -27,6 +35,7 @@ public class Product extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "order_id")
+    @JsonBackReference
     private Order order;
 
     public String getName() {

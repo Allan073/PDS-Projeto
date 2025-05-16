@@ -2,6 +2,7 @@ package br.ufrn.imd.cbm.services;
 
 import br.ufrn.imd.cbm.dtos.OrderDTO;
 import br.ufrn.imd.cbm.models.Order;
+import br.ufrn.imd.cbm.models.User;
 import br.ufrn.imd.cbm.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,52 +16,50 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public void createOrder(OrderDTO OrderDTO) {
+    public void createOrder(OrderDTO OrderDTO, String username) {
         Order newOrder = Order.builder()
-                .user(userService.findUserById(OrderDTO.userId()))
-                .orderDate(OrderDTO.orderDate())
+                .user(userService.findUserByEmail(username))
+                .orderDate(OrderDTO.orderdate())
                 .description(OrderDTO.description())
-                .orderState(OrderDTO.orderState())
-                .totalPrice(OrderDTO.totalPrice())
+                .orderState(OrderDTO.orderstate())
+                .totalPrice(OrderDTO.totalprice())
                 .build();
         orderRepository.save(newOrder);
     }
 
-    public Order findOrderById_DTO(Long orderId, OrderDTO OrderDTO) {
-        return findOrderById_User(orderId,OrderDTO.userId());
-    }
-
-    public Order findOrderById_User(Long orderId, Long userId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Endereço não encontrado!"));
-        if (order.getUser().getId().equals(userId)) {
+    public Order findOrderById(Long orderId, String username) {
+        User user = userService.findUserByEmail(username);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+        if (user.isAdmin() || order.getUser().getId().equals(user.getId())) {
             return order;
         }
         else {
-            throw new RuntimeException("Endereço não pertence a usuário");
+            throw new RuntimeException("Pedido não pertence a usuário");
         }
     }
 
     public Order findOrderById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Endereço não encontrado!"));
+        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
     }
 
-    public void updateOrder(Long orderId, OrderDTO OrderDTO) {
-        Order updatingorder = findOrderById_DTO(orderId, OrderDTO);
-        if (OrderDTO.orderDate() != null) updatingorder.setOrderDate(OrderDTO.orderDate());
+    public void updateOrder(Long orderId, OrderDTO OrderDTO, String username) {
+        Order updatingorder = findOrderById(orderId, username);
+        if (OrderDTO.orderdate() != null) updatingorder.setOrderDate(OrderDTO.orderdate());
         if (OrderDTO.description() != null) updatingorder.setDescription(OrderDTO.description());
-        if (OrderDTO.orderState() != null) updatingorder.setOrderState(OrderDTO.orderState());
-        if (OrderDTO.totalPrice() != null) updatingorder.setTotalPrice(OrderDTO.totalPrice());
+        if (OrderDTO.orderstate() != null) updatingorder.setOrderState(OrderDTO.orderstate());
+        if (OrderDTO.totalprice() != null) updatingorder.setTotalPrice(OrderDTO.totalprice());
         orderRepository.save(updatingorder);
     }
 
-    public void deleteOrder(Long orderId, OrderDTO OrderDTO) {
-        Order order = findOrderById_DTO(orderId, OrderDTO);
+    public void deleteOrder(Long orderId, String username) {
+        Order order = findOrderById(orderId, username);
         orderRepository.deleteById(orderId);
     }
 
-    public List<Order> findAllUserOrders(OrderDTO OrderDTO) {
-        return orderRepository.findByUser_Id(OrderDTO.userId())
-                .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
+    public List<Order> findAllUserOrders(String username) {
+        
+        return orderRepository.findByUser_Id(userService.findUserByEmail(username).getId())
+                .orElseThrow(() -> new RuntimeException("Nenhum pedido encontrado!"));
     }
 
     public List<Order> findAllOrders() {
