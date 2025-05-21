@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
-import com.seuprojeto.model.Finance; // Ajuste o pacote conforme sua estrutura
-import com.seuprojeto.repository.FinanceRepository; // Ajuste o caminho conforme necessário
+import br.ufrn.imd.cbm.models.Finance; 
+import br.ufrn.imd.cbm.repositories.FinanceRepository; 
 
 import com.llamaindex.LlamaModel; // Exemplo fictício, ajuste conforme a biblioteca utilizada
 
@@ -26,7 +26,7 @@ public class FinanceReportService {
         for (Finance entry : data) {
             report.append("total: ").append(entry.getTotal())
                   .append(", Income: ").append(entry.getTotalIncome())
-                  .append(", Despesa: ").append(entry.getExpense()).append("\n");
+                  .append(", Despesa: ").append(entry.getTotalExpense()).append("\n");
         }
 
         return report.toString();
