@@ -12,7 +12,7 @@ import java.util.Optional;
 import br.ufrn.imd.cbm.models.Finance; 
 import br.ufrn.imd.cbm.repositories.FinanceRepository; 
 
-import com.llamaindex.LlamaModel; // Exemplo fictício, ajuste conforme a biblioteca utilizada
+import ai.llamaindex.LlamaModel; //problema aqui
 
 @Service
 public class FinanceReportService {
@@ -31,4 +31,18 @@ public class FinanceReportService {
 
         return report.toString();
     }
+
+     public String generateAIReport() {
+        List<Finance> data = repository.findAll();
+        String rawData = data.stream()
+            .map(entry -> "total: " + entry.getTotal() + ", Income: " + entry.getIncome() + ", Despesa: " + entry.getTotalExpense())
+            .collect(Collectors.joining("\n"));
+
+        // Chamando um modelo de IA (Llama 2) para gerar um relatório mais elaborado
+        String aiReport = llamaModel.generateReport(rawData);
+        return aiReport;
+    }
+
+
+
 }
