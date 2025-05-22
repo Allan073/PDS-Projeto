@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.ufrn.imd.cbm.services.FinanceReportService; // Ajuste o caminho conforme necessário
+import br.ufrn.imd.cbm.services.FinanceReportService; 
 
 @RestController
 @RequestMapping("/report")
