@@ -1,8 +1,10 @@
 package br.ufrn.imd.cbm.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import br.ufrn.imd.cbm.serializers.AbstractEntitySerializer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 public class Address extends AbstractEntity{
     @ManyToOne
     @JoinColumn(nullable = false, name = "userid")
+    @JsonSerialize(using = AbstractEntitySerializer.class)
     private User user;
     @Column(nullable = false)
     private String street;

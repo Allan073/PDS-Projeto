@@ -2,9 +2,10 @@ package br.ufrn.imd.cbm.models;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.ufrn.imd.cbm.serializers.AbstractEntitySerializer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,7 @@ public class Product extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "order_id")
-    @JsonBackReference
+    @JsonSerialize(using = AbstractEntitySerializer.class)
     private Order order;
 
     public String getName() {

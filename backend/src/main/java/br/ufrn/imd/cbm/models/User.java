@@ -1,10 +1,11 @@
 package br.ufrn.imd.cbm.models;
 
 import br.ufrn.imd.cbm.enums.RoleName;
+import br.ufrn.imd.cbm.serializers.AbstractEntityListSerializer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,11 +45,11 @@ public class User extends AbstractEntity {
     private List<Role> roles;
     @OneToMany(mappedBy = "user")
     @Column
-    @JsonManagedReference
+    @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Address> addresses;
     @OneToMany(mappedBy = "user")
     @Column
-    @JsonManagedReference
+    @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Order> orders;
 
 

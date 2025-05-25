@@ -1,9 +1,10 @@
 package br.ufrn.imd.cbm.models;
 
 import br.ufrn.imd.cbm.enums.DeliveryState;
+import br.ufrn.imd.cbm.serializers.AbstractEntityListSerializer;
+import br.ufrn.imd.cbm.serializers.AbstractEntitySerializer;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ import java.util.List;
 public class Order extends AbstractEntity {
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
+    @JsonSerialize(using = AbstractEntitySerializer.class)
     private User user;
 
     @Column(nullable = false)
@@ -44,7 +46,7 @@ public class Order extends AbstractEntity {
 
     @OneToMany(mappedBy = "order")
     @Column(nullable = false)
-    @JsonManagedReference
+    @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Product> products;
 
     public User getUser() {

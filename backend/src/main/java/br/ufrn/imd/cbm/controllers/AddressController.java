@@ -1,8 +1,9 @@
 package br.ufrn.imd.cbm.controllers;
 
+import br.ufrn.imd.cbm.annotations.AdminOnly;
+import br.ufrn.imd.cbm.annotations.AnyAuthed;
 import br.ufrn.imd.cbm.dtos.AddressDTO;
 import br.ufrn.imd.cbm.models.Address;
-import br.ufrn.imd.cbm.models.User;
 import br.ufrn.imd.cbm.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ public class AddressController {
         addressService.createAddress(address,username);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @AnyAuthed
     @GetMapping("/{addressId}")
     public ResponseEntity<Address> getAddressById(
             @PathVariable Long addressId,
@@ -49,7 +52,7 @@ public class AddressController {
         List<Address> addresses = addressService.findAllUserAddresses(username);
         return ResponseEntity.status(HttpStatus.OK).body(addresses);
     }
-
+    @AdminOnly
     @GetMapping("/all")
     public ResponseEntity<List<Address>> getAllAddresses() {
         List<Address> addresses = addressService.findAllAddresses();

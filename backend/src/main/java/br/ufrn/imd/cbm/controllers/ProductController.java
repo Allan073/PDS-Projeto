@@ -1,5 +1,6 @@
 package br.ufrn.imd.cbm.controllers;
 
+import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.dtos.ProductDTO;
 import br.ufrn.imd.cbm.models.Product;
 import br.ufrn.imd.cbm.services.ProductService;
@@ -17,38 +18,46 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @AdminOnly
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductDTO product) {
         productService.createProduct(product);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @AdminOnly
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
         Product product = productService.findProductById(productId, ProductDTO);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
+    @AdminOnly
     @PostMapping("/{productId}")
     public ResponseEntity<String> updateProductById(@PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
         productService.updateProduct(productId,ProductDTO);
         return new ResponseEntity<>("Endereço com sucesso",HttpStatus.OK);
     }
 
+    @AdminOnly
     @DeleteMapping("/{productId}") public ResponseEntity<String> deleteProductById(@PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
         productService.deleteProduct(productId,ProductDTO);
         return new ResponseEntity<>("Endereço com sucesso",HttpStatus.NO_CONTENT);
     }
 
+    @AdminOnly
     @GetMapping("/allorder") public ResponseEntity<List<Product>> getAllOrderProducts(@RequestBody ProductDTO ProductDTO) {
         List<Product> products = productService.findAllOrderProducts(ProductDTO);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
+    @AdminOnly
     @GetMapping("/alluser") public ResponseEntity<List<Product>> getAllUserProducts(@AuthenticationPrincipal String username) {
         List<Product> products = productService.findAllUserProducts(username);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
+    @AdminOnly
     @GetMapping("/all")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.findAllProducts();

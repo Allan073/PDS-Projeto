@@ -1,5 +1,6 @@
 package br.ufrn.imd.cbm.controllers;
 
+import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.dtos.CreateOperationDto;
 import br.ufrn.imd.cbm.models.Operation;
 import br.ufrn.imd.cbm.services.OperationService;
@@ -16,18 +17,21 @@ public class OperationController {
     @Autowired
     private OperationService operationService;
 
+    @AdminOnly
     @PostMapping
     public ResponseEntity<Void> createOperation(@RequestBody CreateOperationDto createOperationDto) {
         operationService.createOperation(createOperationDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @AdminOnly
     @GetMapping("/{id}")
     public ResponseEntity<Operation> getOperationById(@PathVariable Long id) {
         Operation operation = operationService.findOperationById(id);
         return ResponseEntity.status(HttpStatus.OK).body(operation);
     }
 
+    @AdminOnly
     @GetMapping("/all")
     public ResponseEntity<List<Operation>> getAllOperations() {
         List<Operation> operations = operationService.findAllOperations();
