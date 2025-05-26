@@ -3,6 +3,7 @@ package br.ufrn.imd.cbm.controllers;
 import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.dtos.ProductDTO;
 import br.ufrn.imd.cbm.models.Product;
+import br.ufrn.imd.cbm.models.User;
 import br.ufrn.imd.cbm.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,8 +53,8 @@ public class ProductController {
     }
 
     @AdminOnly
-    @GetMapping("/alluser") public ResponseEntity<List<Product>> getAllUserProducts(@AuthenticationPrincipal String username) {
-        List<Product> products = productService.findAllUserProducts(username);
+    @GetMapping("/alluser") public ResponseEntity<List<Product>> getAllUserProducts(@AuthenticationPrincipal User user) {
+        List<Product> products = productService.findAllUserProducts(user);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 

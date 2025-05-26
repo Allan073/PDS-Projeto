@@ -3,7 +3,6 @@ package br.ufrn.imd.cbm.controllers;
 import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.annotations.AnyAuthed;
 import br.ufrn.imd.cbm.annotations.CustomerOnly;
-import br.ufrn.imd.cbm.annotations.Unauthed;
 import br.ufrn.imd.cbm.dtos.CreateUserDto;
 import br.ufrn.imd.cbm.dtos.LoginUserDto;
 import br.ufrn.imd.cbm.dtos.RecoveryJwtTokenDto;
@@ -23,14 +22,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Unauthed
     @PostMapping("/login")
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
         RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    @Unauthed
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
         userService.createUser(createUserDto);
@@ -57,8 +54,8 @@ public class UserController {
 
     @AdminOnly
     @GetMapping("/test/getuser")
-    public ResponseEntity<String> getUserAuthenticationTest(@AuthenticationPrincipal String username) {
-        return ResponseEntity.status(HttpStatus.OK).body(username);
+    public ResponseEntity<String> getUserAuthenticationTest(@AuthenticationPrincipal User user) {
+        return ResponseEntity.status(HttpStatus.OK).body(user.getEmail());
     }
 
     @AdminOnly

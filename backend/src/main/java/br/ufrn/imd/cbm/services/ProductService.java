@@ -2,6 +2,7 @@ package br.ufrn.imd.cbm.services;
 
 import br.ufrn.imd.cbm.dtos.ProductDTO;
 import br.ufrn.imd.cbm.models.Product;
+import br.ufrn.imd.cbm.models.User;
 import br.ufrn.imd.cbm.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,8 +61,8 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 
-    public List<Product> findAllUserProducts(String username) {
-        return productRepository.findByOrder_UserId(userService.findUserByEmail(username).getId())
+    public List<Product> findAllUserProducts(User user) {
+        return productRepository.findByOrder_UserId(userService.findUserById(user.getId()).getId())
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 

@@ -6,8 +6,7 @@ import br.ufrn.imd.cbm.repositories.OperationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,7 +17,7 @@ public class OperationService {
     public void createOperation(CreateOperationDto createOperationDto) {
         Operation newOperation = Operation.builder()
                 .type(createOperationDto.type())
-                .date(Timestamp.valueOf(LocalDateTime.now()))
+                .date(LocalDate.now())
                 .description(createOperationDto.description())
                 .amount(createOperationDto.amount())
                 .build();

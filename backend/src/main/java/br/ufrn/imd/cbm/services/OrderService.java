@@ -16,9 +16,9 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public void createOrder(OrderDTO OrderDTO, String username) {
+    public void createOrder(OrderDTO OrderDTO, User user) {
         Order newOrder = Order.builder()
-                .user(userService.findUserByEmail(username))
+                .user(userService.findUserById(user.getId()))
                 .orderDate(OrderDTO.orderdate())
                 .description(OrderDTO.description())
                 .orderState(OrderDTO.orderstate())
@@ -27,8 +27,7 @@ public class OrderService {
         orderRepository.save(newOrder);
     }
 
-    public Order findOrderById(Long orderId, String username) {
-        User user = userService.findUserByEmail(username);
+    public Order findOrderById(Long orderId, User user) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
         if (user.isAdmin() || order.getUser().getId().equals(user.getId())) {
             return order;
@@ -42,8 +41,8 @@ public class OrderService {
         return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
     }
 
-    public void updateOrder(Long orderId, OrderDTO OrderDTO, String username) {
-        Order updatingorder = findOrderById(orderId, username);
+    public void updateOrder(Long orderId, OrderDTO OrderDTO, User user) {
+        Order updatingorder = findOrderById(orderId, user);
         if (OrderDTO.orderdate() != null) updatingorder.setOrderDate(OrderDTO.orderdate());
         if (OrderDTO.description() != null) updatingorder.setDescription(OrderDTO.description());
         if (OrderDTO.orderstate() != null) updatingorder.setOrderState(OrderDTO.orderstate());
@@ -51,14 +50,13 @@ public class OrderService {
         orderRepository.save(updatingorder);
     }
 
-    public void deleteOrder(Long orderId, String username) {
-        Order order = findOrderById(orderId, username);
+    public void deleteOrder(Long orderId, User user) {
+        Order order = findOrderById(orderId, user);
         orderRepository.deleteById(orderId);
     }
 
-    public List<Order> findAllUserOrders(String username) {
-        
-        return orderRepository.findByUser_Id(userService.findUserByEmail(username).getId())
+    public List<Order> findAllUserOrders(User user) {
+        return orderRepository.findByUser_Id(userService.findUserById(user.getId()).getId())
                 .orElseThrow(() -> new RuntimeException("Nenhum pedido encontrado!"));
     }
 
