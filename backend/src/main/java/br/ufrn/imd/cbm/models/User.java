@@ -11,9 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "users")
 @Entity(name = "User")
@@ -25,7 +29,7 @@ import java.util.List;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 )
-public class User extends AbstractEntity {
+public class User extends AbstractEntity implements UserDetails {
 
 
 
@@ -52,6 +56,18 @@ public class User extends AbstractEntity {
     @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Order> orders;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
 
     public String getName() {
         return name;
@@ -107,4 +123,5 @@ public class User extends AbstractEntity {
         }
         return false;
     }
+
 }
