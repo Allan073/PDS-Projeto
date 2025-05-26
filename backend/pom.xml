@@ -99,4 +99,10 @@
 		</plugins>
 	</build>
 
+	<dependency> <!-- inserido por Allan -->
+    	    <groupId>ai.llamaindex</groupId>
+    	    <artifactId>llama-index</artifactId>
+    	    <version>0.10.6</version> <!-- Verifique a versão mais recente -->
+	</dependency>
+	
 </project>

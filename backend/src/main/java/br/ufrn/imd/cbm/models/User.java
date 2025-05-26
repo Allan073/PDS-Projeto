@@ -1,11 +1,17 @@
 package br.ufrn.imd.cbm.models;
 
+import br.ufrn.imd.cbm.enums.RoleName;
+import br.ufrn.imd.cbm.serializers.AbstractEntityListSerializer;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -15,6 +21,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class User extends AbstractEntity {
 
 
@@ -33,13 +43,14 @@ public class User extends AbstractEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
-
-    /*
-    //Dado que a gente tem "user" no lugar de cliente eu vou colocar os endereços aqui com um comentário e se precisar
-    //cortar é só remover
-    @OneToMany
-    @Column(nullable = false)
-    private List<Address> address;*/
+    @OneToMany(mappedBy = "user")
+    @Column
+    @JsonSerialize(using = AbstractEntityListSerializer.class)
+    private List<Address> addresses;
+    @OneToMany(mappedBy = "user")
+    @Column
+    @JsonSerialize(using = AbstractEntityListSerializer.class)
+    private List<Order> orders;
 
 
     public String getName() {
@@ -74,12 +85,26 @@ public class User extends AbstractEntity {
         this.roles = roles;
     }
 
-    /*public List<Address> getAddress() {
-        return address;
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setAddress(List<Address> address) {
-        this.address = address;
-    }*/
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public boolean isAdmin() {
+        for (Role role : getRoles()) {
+            if (role.getName() == RoleName.ROLE_ADMINISTRATOR) return true;
+        }
+        return false;
+    }
 }

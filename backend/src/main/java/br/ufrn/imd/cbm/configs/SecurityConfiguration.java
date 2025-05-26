@@ -22,25 +22,42 @@ public class SecurityConfiguration {
     private UserAuthenticationFilter userAuthenticationFilter;
 
     // Endpoints públicos
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
+   public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/users/login",
             "/users"
     };
 
     // Endpoints funcionais para qualquer usuário autenticado
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-            "/users/test"
+    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = { //esse sistema me causa sofrimento
+            "/users/test",
+            "/address/{addressId}",
+            "/orders/{orderId}",
+            "/orders/",
+            "/address/",
+            "/address/**",
+            "/orders/**",
+            "/products/**",
+            "/products/",
     };
 
     // Endpoints que só podem ser acessado por usuários com permissão de cliente
     public static final String [] ENDPOINTS_CUSTOMER = {
-            "/users/test/customer"
+            "/users/test/customer",
+
     };
 
     // Endpoints que só podem ser acessado por usuários com permissão de administrador
     public static final String [] ENDPOINTS_ADMIN = {
             "/users/test/administrator",
+            "/users/test/getuser",
             "/users/{id}",
+            "/address/{id}",
+            "/orders/{id}",
+            "/orders/",
+            "/address/",
+            "/address/**",
+            "/orders/**",
+            "/products/**",
             "/users/find-by-email",
             "/transactions/**",
             "/items/**",
