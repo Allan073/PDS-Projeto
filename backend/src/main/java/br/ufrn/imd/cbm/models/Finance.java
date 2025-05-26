@@ -1,50 +1,31 @@
 package br.ufrn.imd.cbm.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Table (name="finance")
+@Table (name = "finances")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class Finance extends AbstractEntity{
-    @OneToMany
+    @OneToMany(mappedBy = "finance")
     private List<Operation> operations;
+
     @Column(nullable = false)
     private Double total;
+
     @Column(nullable = false)
     private Double totalIncome;
+    
     @Column(nullable = false)
     private Double totalExpense;
-
-    public List<Operation> getOperations() {
-        return operations;
-    }
-
-    public void setOperations(List<Operation> operations) {
-        this.operations = operations;
-    }
-
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
-    }
-
-    public Double getTotalIncome() {
-        return totalIncome;
-    }
-
-    public void setTotalIncome(Double totalIncome) {
-        this.totalIncome = totalIncome;
-    }
-
-    public Double getTotalExpense() {
-        return totalExpense;
-    }
-
-    public void setTotalExpense(Double totalExpense) {
-        this.totalExpense = totalExpense;
-    }
 }

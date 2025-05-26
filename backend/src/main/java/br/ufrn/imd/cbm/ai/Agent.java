@@ -6,10 +6,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
@@ -47,10 +49,16 @@ public class Agent {
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 .thenAccept((response) -> {
-                    System.out.println(response);
+                    try {
+                        JsonNode root = mapper.readTree(response);
+                        String responseText = root.path("choices").get(0).path("message").path("content").asText();
+                        System.out.println("Response: " + responseText);
+                    } catch (Exception e) {
+                        System.out.println("Erro ao processar a resposta: " + e.getMessage());
+                    };
                 });
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         };
     };
 }

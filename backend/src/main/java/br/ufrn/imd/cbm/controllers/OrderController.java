@@ -22,34 +22,34 @@ public class OrderController {
 
     @AnyAuthed
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderDTO order, @AuthenticationPrincipal String username) {
-        orderService.createOrder(order, username);
+    public ResponseEntity<Void> createOrder(@RequestBody OrderDTO order, @AuthenticationPrincipal User user) {
+        orderService.createOrder(order, user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @AnyAuthed
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId, @AuthenticationPrincipal String username) {
-        Order order = orderService.findOrderById(orderId, username);
+    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId, @AuthenticationPrincipal User user) {
+        Order order = orderService.findOrderById(orderId, user);
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
     @AnyAuthed
     @PostMapping("/{orderId}")
-    public ResponseEntity<String> updateOrderById(@PathVariable Long orderId, @RequestBody OrderDTO OrderDTO, @AuthenticationPrincipal String username) {
-        orderService.updateOrder(orderId,OrderDTO,username);
+    public ResponseEntity<String> updateOrderById(@PathVariable Long orderId, @RequestBody OrderDTO OrderDTO, @AuthenticationPrincipal User user) {
+        orderService.updateOrder(orderId,OrderDTO,user);
         return new ResponseEntity<>("Pedido atualizado com sucesso",HttpStatus.OK);
     }
 
     @AnyAuthed
-    @DeleteMapping("/{orderId}") public ResponseEntity<String> deleteOrderById(@PathVariable Long orderId, @AuthenticationPrincipal String username) {
-        orderService.deleteOrder(orderId, username);
+    @DeleteMapping("/{orderId}") public ResponseEntity<String> deleteOrderById(@PathVariable Long orderId, @AuthenticationPrincipal User user) {
+        orderService.deleteOrder(orderId, user);
         return new ResponseEntity<>("Pedido apagado com sucesso",HttpStatus.NO_CONTENT);
     }
 
     @AnyAuthed
-    @GetMapping("/alluser") public ResponseEntity<List<Order>> getAllUserOrders(@AuthenticationPrincipal String username) {
-        List<Order> orders = orderService.findAllUserOrders(username);
+    @GetMapping("/alluser") public ResponseEntity<List<Order>> getAllUserOrders(@AuthenticationPrincipal User user) {
+        List<Order> orders = orderService.findAllUserOrders(user);
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
