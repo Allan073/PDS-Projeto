@@ -40,10 +40,10 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         // Obtém o objeto UserDetails do usuário autenticado
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
         // Gera um token JWT para o usuário autenticado
-        return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
+        return new RecoveryJwtTokenDto(jwtTokenService.generateToken(user));
     }
 
     public void createUser(CreateUserDto createUserDto) {

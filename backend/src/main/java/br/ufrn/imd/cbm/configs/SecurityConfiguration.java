@@ -29,7 +29,6 @@ public class SecurityConfiguration {
     @Autowired
     private UserAuthenticationFilter userAuthenticationFilter;
 
-    // Endpo
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -60,7 +59,7 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     };
-
+    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

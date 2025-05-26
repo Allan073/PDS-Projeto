@@ -1,5 +1,6 @@
 package br.ufrn.imd.cbm.services;
 
+import br.ufrn.imd.cbm.models.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -16,7 +17,7 @@ public class JwtTokenService {
 
     private static final String ISSUER = "cbm-api";
 
-    public String generateToken(UserDetailsImpl user) {
+    public String generateToken(User user) {
         try {
             // Define o algoritmo HMAC SHA256 para criar a assinatura do token passando a chave secreta definida
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
