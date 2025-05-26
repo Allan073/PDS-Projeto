@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface FinanceRepository extends JpaRepository<Finance, Long>  {
-    List<Finance> findAll(); linha adicionada por allan.
+    List<Finance> findByTotal(String total);  //linha adicionada por Allan 
 }
