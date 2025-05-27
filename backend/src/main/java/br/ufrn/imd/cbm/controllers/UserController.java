@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @AnyAuthed
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateUserById(@PathVariable Long id, @RequestBody CreateUserDto user){
         userService.updateUserById(id,user);
         return new ResponseEntity<>("User atualizado com sucesso", HttpStatus.OK);

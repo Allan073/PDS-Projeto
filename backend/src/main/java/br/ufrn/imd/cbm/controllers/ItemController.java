@@ -32,6 +32,13 @@ public class ItemController {
     }
 
     @AdminOnly
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateItem(@PathVariable Long id, @RequestBody CreateItemDto createItemDto) {
+        itemService.updateItemById(id, createItemDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @AdminOnly
     @GetMapping("/all")
     public ResponseEntity<List<Item>> getAllItems() {
         List<Item> items = itemService.findAllItems();

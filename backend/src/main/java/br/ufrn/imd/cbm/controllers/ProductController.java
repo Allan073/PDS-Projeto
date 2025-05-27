@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @AdminOnly
-    @PostMapping("/{productId}")
+    @PutMapping("/{productId}")
     public ResponseEntity<String> updateProductById(@PathVariable Long productId, @RequestBody ProductDTO ProductDTO) {
         productService.updateProduct(productId,ProductDTO);
         return new ResponseEntity<>("Endereço com sucesso",HttpStatus.OK);

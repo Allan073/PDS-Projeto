@@ -35,7 +35,7 @@ public class OrderController {
     }
 
     @AnyAuthed
-    @PostMapping("/{orderId}")
+    @PutMapping("/{orderId}")
     public ResponseEntity<String> updateOrderById(@PathVariable Long orderId, @RequestBody OrderDTO OrderDTO, @AuthenticationPrincipal User user) {
         orderService.updateOrder(orderId,OrderDTO,user);
         return new ResponseEntity<>("Pedido atualizado com sucesso",HttpStatus.OK);

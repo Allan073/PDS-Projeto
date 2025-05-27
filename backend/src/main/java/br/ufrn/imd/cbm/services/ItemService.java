@@ -24,6 +24,15 @@ public class ItemService {
         itemRepository.save(newItem);
     }
 
+    public void updateItemById(Long id, CreateItemDto createItemDto) {
+        Item item = findItemById(id);
+        if (createItemDto.name() != null) item.setName(createItemDto.name());
+        if (createItemDto.description() != null) item.setDescription(createItemDto.description());
+        if (createItemDto.price() != null) item.setPrice(createItemDto.price());
+        if (createItemDto.quantity() != null) item.setQuantity(createItemDto.quantity());
+        itemRepository.save(item);
+    }
+
     public Item findItemById(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Item não encontrado"));

@@ -32,7 +32,7 @@ public class RecipeController {
     }
 
     @AdminOnly
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateRecipeById(@PathVariable Long id, @RequestBody CreateRecipeDTO createRecipeDTO) {
         recipeService.updateRecipe(id,createRecipeDTO);
         return new ResponseEntity<>("Receita atualizada com sucesso",HttpStatus.OK);

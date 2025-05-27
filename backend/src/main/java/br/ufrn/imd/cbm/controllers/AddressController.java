@@ -36,7 +36,7 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(address);
     }
 
-    @PostMapping("/{addressId}")
+    @PutMapping("/{addressId}")
     public ResponseEntity<String> updateAddressById(@PathVariable Long addressId, @RequestBody AddressDTO address,
                                                     @AuthenticationPrincipal User user) {
         addressService.updateAddress(addressId,address, user);
