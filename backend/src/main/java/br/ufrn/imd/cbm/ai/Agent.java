@@ -1,5 +1,6 @@
 package br.ufrn.imd.cbm.ai;
 
+import br.ufrn.imd.cbm.models.Finance;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -22,11 +23,12 @@ public class Agent {
         this.key = env.getProperty("ai.key");
     };
 
-    public void report() {
+    public void report(double total, double totalIncome, double totalExpense) {
         HttpClient client = HttpClient.newHttpClient();
         ObjectMapper mapper = new ObjectMapper();
 
-        String prompt = "óla mundo";
+        String prompt = " me retorne os valores de total " + total + " os valores de totalIncome " + totalIncome + 
+        " e os valores de totalExpense " + totalExpense + " no formato de um relatorio.";
         Map<String, Object> map = Map.of(
             "model", "google/gemini-2.0-flash-exp:free",
             "messages", List.of(
