@@ -1,6 +1,6 @@
 package br.ufrn.imd.cbm.ai;
 
-import br.ufrn.imd.cbm.models.Finance;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.ufrn.imd.cbm.models.Operation;
+
 @Component
 public class Agent {
     private String key;
@@ -23,18 +25,38 @@ public class Agent {
         this.key = env.getProperty("ai.key");
     };
 
-    public void report(double total, double totalIncome, double totalExpense) {
+    public void report(double total, double totalIncome, double totalExpense, List<Operation> operations) {
         HttpClient client = HttpClient.newHttpClient();
         ObjectMapper mapper = new ObjectMapper();
 
-        String prompt = " me retorne os valores de total " + total + " os valores de totalIncome " + totalIncome + 
-        " e os valores de totalExpense " + totalExpense + " no formato de um relatorio.";
+        StringBuilder prompt = new StringBuilder();
+    prompt.append(String.format(
+        "Relatório de valores:\n" +
+        "- Total: %.2f\n" +
+        "- Total Income: %.2f\n" +
+        "- Total Expense: %.2f\n" +
+        "Por favor, gere um relatório detalhado com essas informações.\n\n",
+        total, totalIncome, totalExpense
+    ));
+    
+    prompt.append("Lista de operações:\n");
+    
+    for (Operation op : operations) {
+        prompt.append(String.format("- Tipo: %s | Valor: %.2f | Data: %s\n", op.getType(), op.getAmount(), op.getDate()));
+    }
+    
+    // Aqui você pode utilizar o prompt na requisição
+    String finalPrompt = prompt.toString();
+
+
+
+
         Map<String, Object> map = Map.of(
-            "model", "google/gemini-2.0-flash-exp:free",
+            "model", "mistralai/devstral-small:free",
             "messages", List.of(
                 Map.of(
                     "role","user",
-                    "content", prompt
+                    "content", finalPrompt
                 )
             )
         );

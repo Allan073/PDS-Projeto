@@ -31,7 +31,4 @@ public class Operation extends AbstractEntity {
     @Column(nullable = false)
     private double amount;
 
-    @ManyToOne
-    @JoinColumn(name = "finance_id")
-    private Finance finance;
 }
