@@ -19,7 +19,7 @@ import java.util.List;
 public class AddressController {
     @Autowired
     private AddressService addressService;
-
+    @AnyAuthed
     @PostMapping
     public ResponseEntity<Void> createAddress(@RequestBody AddressDTO address, @AuthenticationPrincipal User user) {
         addressService.createAddress(address,user);
@@ -36,6 +36,7 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(address);
     }
 
+    @AnyAuthed
     @PutMapping("/{addressId}")
     public ResponseEntity<String> updateAddressById(@PathVariable Long addressId, @RequestBody AddressDTO address,
                                                     @AuthenticationPrincipal User user) {
@@ -43,13 +44,16 @@ public class AddressController {
         return new ResponseEntity<>("Endereço atualizado com sucesso",HttpStatus.OK);
     }
 
+    @AnyAuthed
     @DeleteMapping("/{addressId}") public ResponseEntity<String> deleteAddressById(@PathVariable Long addressId,
                                                                                    @AuthenticationPrincipal User user) {
         addressService.deleteAddress(addressId, user);
         return new ResponseEntity<>("Endereço apagado com sucesso",HttpStatus.NO_CONTENT);
     }
 
+    @AnyAuthed
     @GetMapping("/alluser") public ResponseEntity<List<Address>> getAllUserAddresses(@AuthenticationPrincipal User user) {
+        System.out.println(user);
         List<Address> addresses = addressService.findAllUserAddresses(user);
         return ResponseEntity.status(HttpStatus.OK).body(addresses);
     }
@@ -60,8 +64,5 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(addresses);
     }
 
-    @GetMapping("/ru")
-    public ResponseEntity<String> testUser(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(user.getEmail(), HttpStatus.OK);
-    }
+
 }

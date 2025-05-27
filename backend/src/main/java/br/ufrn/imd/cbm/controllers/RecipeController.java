@@ -25,6 +25,13 @@ public class RecipeController {
     }
 
     @AdminOnly
+    @PostMapping("/{id}")
+    public ResponseEntity<String> addItemToRecipe(@PathVariable Long id, @RequestBody String itemname) {
+        recipeService.addItemToRecipe(id, itemname);
+        return new ResponseEntity<>("Item adicionado com sucesso",HttpStatus.OK);
+    }
+
+    @AdminOnly
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
         Recipe recipe = recipeService.findRecipeById(id);

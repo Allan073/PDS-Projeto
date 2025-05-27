@@ -30,8 +30,9 @@
 
     async function loadItems() {
         const type = 'items'
+        const name = 'name'
         let list = getAllFromList(type).then((data) => {
-            makeList('itemlist',data)
+            makeList('itemlist',data,name)
         })
 
 
@@ -73,7 +74,11 @@
     function createCreationField() {
         const dummyItem = new Item(null,null,null,null)
         const createDiv = document.getElementById('creatediv')
+        if (createDiv.getAttribute('created') != null) return;
+        createDiv.setAttribute('created','true')
+        const forbiddenfield = []
         for (const key in dummyItem) {
+            if (forbiddenfield.indexOf(key) === -1)
             addField(createDiv,key)
         }
         let submitbutton = document.createElement('button')

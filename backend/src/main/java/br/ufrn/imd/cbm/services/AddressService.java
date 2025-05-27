@@ -49,7 +49,7 @@ public class AddressService {
     }
 
     public List<Address> findAllUserAddresses(User user) {
-        return addressRepository.findByUser_Id(userService.findUserById(user.getId()).getId())
+        return addressRepository.findByUser_Id(user.getId())
                 .orElseThrow(() -> new RuntimeException("Nenhuma receita encontrada!"));
     }
 
