@@ -48,11 +48,11 @@ public class User extends AbstractEntity implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Column
     @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Address> addresses;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Column
     @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Order> orders;
