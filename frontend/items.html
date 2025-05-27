@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body onload="loadItems()">
+<button type="button" onclick="createCreationField()">Criar Item</button>
+<div id="creatediv">
+</div>
+<p>Itens cadastrados:</p>
+<ul id="itemlist"></ul>
+<br>
+<div id="searchdiv">
+    <label for="searchbox">Buscar item: </label><input id="searchbox">
+    <button type="button" onclick="searchItem()">Buscar</button>
+</div>
+
+
+</body>
+<script src="scripts.js">
+</script>
+<script>
+    function Item(name,description,quantity,price) {
+        this.name = name
+        this.description = description
+        this.quantity = quantity
+        this.price = price
+    }
+
+    async function loadItems() {
+        let list = getAllFromList('items').then((data) => {
+            makeList(data)
+        })
+
+
+    }
+
+    function makeList(list) {
+        const ul = document.getElementById('itemlist');
+        for (let i = 0; i < list.length; i++) {
+            const li = document.createElement('li')
+            li.setAttribute('dbid',list[i].id)
+            li.setAttribute('id','li'+list[i].name)
+            li.innerText= list[i].name
+            ul.appendChild(li)
+        }
+
+    }
+    function searchItem() {
+        //quebrar essa func em pedaços menores depois
+        const ul = document.getElementById('itemlist')
+        const searchbox = document.getElementById('searchbox')
+        const text = searchbox.value
+        const li = document.getElementById('li'+text)
+        const searchdiv = document.getElementById('searchdiv')
+        let searcheditem = document.getElementById('searcheditem')
+        let editbutton = document.getElementById('editbutton')
+        let editdiv = document.getElementById('editdiv')
+        //console.log(li.getAttribute('dbid'))
+        if (searcheditem != null) {
+            searcheditem.remove()
+            searcheditem = null;
+            editdiv.remove()
+            editdiv = null
+        }
+        let fetched = getTypenameById('items',li.getAttribute('dbid')).then((data) => {
+            searcheditem = document.createElement('pre')
+            searcheditem.appendChild(document.createTextNode(JSON.stringify(data)))
+            searcheditem.setAttribute('id','searcheditem')
+            searcheditem.setAttribute('dbid',li.getAttribute('dbid'))
+            searchdiv.appendChild(searcheditem)
+
+        }).catch()
+        if (fetched == null) {
+            searcheditem = document.createTextNode('Elemento não encontrado!')
+            searcheditem.setAttribute('searcheditem')
+            searchdiv.appendChild(searcheditem)
+            editbutton.remove()
+        }
+        else {
+
+        }
+        if (editbutton == null) {
+            editbutton = document.createElement('button')
+            editbutton.appendChild(document.createTextNode("Editar"))
+            editbutton.setAttribute('id','editbutton')
+            editbutton.setAttribute('onclick','createEditField()')
+            searchdiv.appendChild(editbutton)
+        }
+
+    }
+    function createEditField() {
+        const searchdiv = document.getElementById('searchdiv')
+        const searcheditem = document.getElementById('searcheditem')
+        let list = JSON.parse(searcheditem.innerText) //gambiarra? não sei se funciona
+        let editdiv = document.createElement('div')
+        editdiv.setAttribute('id','editdiv')
+        for (const listKey in list) {
+            if(listKey !== 'id') addField(editdiv,listKey)
+        }
+        let submitbutton = document.createElement('button')
+        submitbutton.setAttribute('onclick','submitEdit()')
+        submitbutton.innerText = 'Salvar Mudanças'
+        editdiv.appendChild(submitbutton)
+        searchdiv.append(editdiv)
+    }
+    function addField(where,key) {
+        let textfield = document.createElement('input')
+        textfield.setAttribute('type','text')
+        textfield.setAttribute('id',key)
+        textfield.setAttribute('placeholder',key)
+        where.appendChild(textfield)
+    }
+    function submitEdit() {
+        const editdiv = document.getElementById('editdiv')
+        let valuelist = readFields(editdiv)
+        let id = document.getElementById('searcheditem').getAttribute('dbid')
+
+        putTypenameById('items',id,valuelist)
+
+    }
+    function submitNew() {
+        const creatediv = document.getElementById('creatediv')
+        let valuelist = readFields(creatediv)
+        postTypename('items',valuelist)
+    }
+
+    function readFields(where) {
+        let nodelist = where.childNodes
+        let valuelist = {}
+        nodelist.forEach((nodelistKey) => {
+            if(nodelistKey.type === 'text') {
+                let key = nodelistKey.id
+                if(nodelistKey.value.length === 0) {
+                    valuelist[key] = null
+                }
+                else if(isNotNumberStr(nodelistKey.value)) {
+                    valuelist[key] = nodelistKey.value
+                }
+                else {
+                    valuelist[key] = Number(nodelistKey.value)
+                }
+            }
+        })
+        valuelist = JSON.stringify(valuelist)
+        return valuelist
+    }
+    function createCreationField() {
+        const dummyItem = new Item(null,null,null,null)
+        const createDiv = document.getElementById('creatediv')
+        for (const key in dummyItem) {
+            addField(createDiv,key)
+        }
+        let submitbutton = document.createElement('button')
+        submitbutton.setAttribute('onclick','submitNew()')
+        submitbutton.innerText = 'Salvar'
+        createDiv.appendChild(submitbutton)
+    }
+</script>
+</html>

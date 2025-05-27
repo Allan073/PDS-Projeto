@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CBM</title>
+</head>
+<body id="body">
+<div id="login">
+    <label for="email">Email: </label><input id="email" type="text"> <br>
+    <label for="password">Senha: </label><input id="password" type="text"> <br>
+    <input id="submit" type="button" onclick="submitForm()">
+</div>
+<script src="scripts.js"></script>
+<script>
+    function submitForm() {
+            const email = document.getElementById("email").value
+            const passwd = document.getElementById("password").value
+            let js = JSON.stringify({"email":email,"password":passwd})
+            loginRequest(js)
+    }
+
+        async function loginRequest(user) {
+        let cookiename='token';
+            fetch('http://localhost:8080/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                body: user,
+                connection: "keep-alive"
+            }).then(response => response.json()).then(data => {
+                console.log('POST Request Data:', data);
+                setCookie(cookiename,data.token)
+            })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+</script>
+</body>
+
+</html>
