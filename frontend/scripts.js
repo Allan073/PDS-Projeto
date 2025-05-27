@@ -1,5 +1,9 @@
 function setCookie(cname, cvalue) {
-    document.cookie = cname + "=" + cvalue + ";path=/..";
+    let now = new Date(Date.now())
+    console.log(now)
+    now.setDate(now.getDate()+7)
+    console.log(now)
+    document.cookie = cname + "=" + cvalue + ";expires=" + now.toUTCString();
 }
 
 function getCookie(cname) {
@@ -15,18 +19,18 @@ function getCookie(cname) {
             return c.substring(name.length, c.length);
         }
     }
+    console.log("CAIU!")
     return "";
 }
 
 function getAllFromList(type) {
     if (type == null) throw new Error("Tipo de elemento da lista indefinido!")
     let token = getCookie('token')
-    let data2;
     return fetch('http://localhost:8080/' + type + '/all', {
         method: 'GET',
         headers: {
             'Content-Type':'application/json',
-            'Authorization':token
+            'Authorization':'Bearer ' + token
         },
         }).then(response => response.json()).then(data => {
         console.log('POST Request Data:', data);
@@ -40,11 +44,15 @@ function getAllFromList(type) {
 function getTypenameById(type, id) {
     if (type == null || id == null) throw new Error("Tipo ou ID não identificado!")
     let token = getCookie('token')
+    if (token.length === 0) {
+        console.log('TOKEN VAZIO!!!')
+        return null;
+    }
     return fetch('http://localhost:8080/' + type + '/' + id, {
         method: 'GET',
         headers: {
             'Content-Type':'application/json',
-            'Authorization':token
+            'Authorization':'Bearer ' + token
         },
 
     }).then(response => response.json()).then(data => {
@@ -65,7 +73,7 @@ function postTypename(type,list) {
         method: 'POST',
         headers: {
             'Content-Type':'application/json',
-            'Authorization':token,
+            'Authorization':'Bearer ' + token,
         },
         'body':list
 
@@ -84,7 +92,7 @@ function putTypenameById(type,id,list) {
         method: 'PUT',
         headers: {
             'Content-Type':'application/json',
-            'Authorization':token,
+            'Authorization':'Bearer ' + token,
         },
         'body':list
 
@@ -102,7 +110,7 @@ function deleteTypenameById(type,id) {
         method: 'DELETE',
         headers: {
             'Content-Type':'application/json',
-            'Authorization':token,
+            'Authorization':'Bearer ' + token,
         },
 
     }).then(response => response.json())
@@ -114,11 +122,15 @@ function deleteTypenameById(type,id) {
 
 function getSelf() {
     let token = getCookie('token')
+    if (token.length === 0) {
+        console.log('TOKEN VAZIO!!!')
+        return null;
+    }
     return fetch('http://localhost:8080/users/self', {
         method: 'GET',
         headers: {
             'Content-Type':'application/json',
-            'Authorization':token
+            'Authorization': "Bearer " + token
         },
 
     }).then(response => response.json()).then(data => {
@@ -135,13 +147,13 @@ function isNotNumberStr(str) {
     return isNaN(Number(str));
 }
 
-function makeList(listname,list) {
+function makeList(listname,list,name) {
     const ul = document.getElementById(listname);
     for (let i = 0; i < list.length; i++) {
         const li = document.createElement('li')
         li.setAttribute('dbid',list[i].id)
-        li.setAttribute('id','li'+list[i].name)
-        li.innerText= list[i].name
+        li.setAttribute('id','li'+list[i][name])
+        li.innerText= list[i][name]
         ul.appendChild(li)
     }
 }
@@ -155,13 +167,14 @@ function createEditButton(where,type) {
     return editbutton
 }
 function createEditField(button, type) {
-    const where = button.parent
+    if (document.getElementById('editdiv') != null) return null;
+    const where = button.parentNode
     const searcheditem = document.getElementById('searcheditem')
     let list = JSON.parse(searcheditem.innerText) //gambiarra? não sei se funciona
     let editdiv = document.createElement('div')
     editdiv.setAttribute('id','editdiv')
     for (const listKey in list) {
-        if(listKey !== 'id') addField(editdiv,listKey)
+        if(listKey !== 'id' && listKey !== 'user') addField(editdiv,listKey)
     }
     let submitbutton = document.createElement('button')
     submitbutton.setAttribute('onclick','submitEditTypename(this,\'' + type + '\')')
@@ -170,11 +183,10 @@ function createEditField(button, type) {
     where.append(editdiv)
 }
 function submitEditTypename(button,type) {
-    const editdiv = button.parent
+    const editdiv = button.parentNode
     let valuelist = readFields(editdiv)
     let id = document.getElementById('searcheditem').getAttribute('dbid')
-
-    putTypenameById(type,id,valuelist)
+    let rv = putTypenameById(type,id,valuelist)
 
 }
 function readFields(where) {

@@ -83,7 +83,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable Long id){
         userService.deleteUserById(id);
-        return new ResponseEntity<>("User deletado com sucesso", HttpStatus.OK);
+        return new ResponseEntity<>("User deletado com sucesso", HttpStatus.NO_CONTENT);
     }
 
     @AdminOnly
@@ -91,5 +91,19 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> users = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
+    @AnyAuthed
+    @GetMapping("/self")
+    public ResponseEntity<User> getSelfUser(@AuthenticationPrincipal User user){
+        System.out.println(user);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @AnyAuthed
+    @DeleteMapping("/self")
+    public ResponseEntity<String> deleteSelfUser(@AuthenticationPrincipal User user){
+        userService.deleteUserById(user.getId());
+        return new ResponseEntity<>("User deletado com sucesso", HttpStatus.NO_CONTENT);
     }
 }
