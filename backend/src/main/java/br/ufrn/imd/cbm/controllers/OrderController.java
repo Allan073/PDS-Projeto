@@ -22,9 +22,16 @@ public class OrderController {
 
     @AnyAuthed
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderDTO order, @AuthenticationPrincipal User user) {
-        orderService.createOrder(order, user);
+    public ResponseEntity<Void> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
+        orderService.createOrder(orderDTO, user);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @AnyAuthed
+    @PostMapping("/{orderId}")
+    public ResponseEntity<String> addItemToOrder(@PathVariable Long orderId, @RequestBody String itemname) {
+        orderService.addItemToOrder(orderId, itemname);
+        return new ResponseEntity<>("Item adicionado com sucesso",HttpStatus.OK);
     }
 
     @AnyAuthed

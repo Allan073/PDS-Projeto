@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>CBM - Receitas</title>
 </head>
 <body onload="loadItems()">
 <button type="button" onclick="createCreationField()">Criar Receita</button>
 <div id="creatediv">
 </div>
-<p>Receitas cadastrados:</p>
+<p>Receitas cadastradas:</p>
 <ul id="itemlist"></ul>
 <br>
 <div id="searchdiv">
@@ -42,7 +42,7 @@
         const searchdiv = document.getElementById('searchdiv')
         const id = li.getAttribute('dbid')
         const type = 'recipes'
-        const otherfunc = 'createAddItemField()'
+        const otherfunc = 'createAddItemField(\'' + type +'\')'
         let searcheditem = document.getElementById('searcheditem')
         let editbutton = document.getElementById('editbutton')
         let editdiv = document.getElementById('editdiv')
