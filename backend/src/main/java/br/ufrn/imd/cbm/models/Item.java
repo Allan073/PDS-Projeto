@@ -21,6 +21,8 @@ public class Item extends AbstractEntity{
     private int quantity;
     @Column (nullable = false)
     private double price;
+    @Column (nullable = false)
+    private boolean orderable = false;
 
 
     public String getName() {
@@ -53,5 +55,13 @@ public class Item extends AbstractEntity{
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public boolean isOrderable() {
+        return orderable;
+    }
+
+    public void setOrderable(boolean orderable) {
+        this.orderable = orderable;
     }
 }

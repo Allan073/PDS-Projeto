@@ -11,7 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class Order extends AbstractEntity {
     @Column(nullable = false)
     //@JsonSerialize(using = LocalDateTimeSerializer.class)
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date orderDate;
+    private LocalDate orderDate;
 
     @Column(nullable = false)
     private String description;
@@ -44,10 +45,10 @@ public class Order extends AbstractEntity {
     @Column(nullable = false)
     private Double totalPrice;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany
     @Column(nullable = false)
     @JsonSerialize(using = AbstractEntityListSerializer.class)
-    private List<Product> products;
+    private List<Item> items = new ArrayList<>();
 
     public User getUser() {
         return user;
@@ -57,11 +58,11 @@ public class Order extends AbstractEntity {
         this.user = user;
     }
 
-    public Date getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -89,11 +90,11 @@ public class Order extends AbstractEntity {
         this.totalPrice = totalPrice;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 }

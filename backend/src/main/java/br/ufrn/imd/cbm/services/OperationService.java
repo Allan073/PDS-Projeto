@@ -1,7 +1,9 @@
 package br.ufrn.imd.cbm.services;
 
 import br.ufrn.imd.cbm.dtos.CreateOperationDto;
+import br.ufrn.imd.cbm.enums.FinancialMovement;
 import br.ufrn.imd.cbm.models.Operation;
+import br.ufrn.imd.cbm.models.Order;
 import br.ufrn.imd.cbm.repositories.OperationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,15 @@ public class OperationService {
                 .amount(createOperationDto.amount())
                 .build();
 
+        operationRepository.save(newOperation);
+    }
+    public void createFromOrder(Order order) {
+        Operation newOperation = Operation.builder()
+                .type(FinancialMovement.INCOMING)
+                .date(LocalDate.now())
+                .description("Order " + order.getId().toString())
+                .amount(order.getTotalPrice())
+                .build();
         operationRepository.save(newOperation);
     }
 

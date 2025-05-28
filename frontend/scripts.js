@@ -193,6 +193,7 @@ function createEditField(button, type) {
     if (document.getElementById('editdiv') != null) return null;
     const forbiddenfield = ['id','user','items']
     const where = button.parentNode
+    createDeleteButton(where,type)
     const searcheditem = document.getElementById('searcheditem')
     let list = JSON.parse(searcheditem.innerText) //gambiarra? não sei se funciona
     let editdiv = document.createElement('div')
@@ -242,14 +243,16 @@ function createSearchedItem(where, id, data) {
     return searcheditem
 }
 
-function addField(where,key) {
+function addField(where,key,type) {
+    if (type == null) type = 'text'
     let textfield = document.createElement('input')
-    textfield.setAttribute('type','text')
+    textfield.setAttribute('type',type)
     textfield.setAttribute('id',key)
     textfield.setAttribute('placeholder',key)
     where.appendChild(textfield)
 }
-function createAddItemField() {
+
+function createAddItemField(type) {
     if (document.getElementById('additemfield') != null) return;
     const editdiv = document.getElementById('editdiv')
     editdiv.appendChild(document.createElement('br'))
@@ -260,7 +263,7 @@ function createAddItemField() {
     let submitbutton = document.createElement('button')
     submitbutton.appendChild(document.createTextNode('Adicionar Item'))
     submitbutton.setAttribute('type','button')
-    submitbutton.setAttribute('onclick','addItem()')
+    submitbutton.setAttribute('onclick','addItem(\'' + type + '\')')
     submitbutton.setAttribute('id','submititembutton')
     editdiv.appendChild(textfield)
     editdiv.appendChild(submitbutton)
@@ -272,4 +275,21 @@ function addItem() {
     const value = textfield.value
     const id = document.getElementById('searcheditem').getAttribute('dbid')
     let posted = postTypenameById(typename,id,value)
+}
+function createDeleteButton(where,type) {
+    const deletebutton = document.createElement('button')
+    deletebutton.innerText = 'Deletar'
+    deletebutton.setAttribute('onclick','deleteItem(this,\'' + type +'\')')
+    deletebutton.setAttribute('id','deletebutton')
+
+
+    where.appendChild(deletebutton)
+}
+
+function deleteItem(button, type) {
+    const editdiv = button.parentNode
+    const id = document.getElementById('searcheditem').getAttribute('dbid')
+    if(window.confirm('Este '+ type + 'será deletado permanentemente')) {
+        let rv = deleteTypenameById(type, id)
+    }
 }
