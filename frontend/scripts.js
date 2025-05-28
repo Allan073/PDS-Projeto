@@ -83,6 +83,25 @@ function postTypename(type,list) {
             return null;
         });
 }
+function postTypenameById(type,id,list) {
+    if (type == null  || id == null || list == null) throw new Error("Tipo ou ID não identificado!")
+    console.log(list)
+    let token = getCookie('token')
+    return fetch('http://localhost:8080/' + type + '/' + id, {
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json',
+            'Authorization':'Bearer ' + token,
+        },
+        'body':list
+
+    }).then(response => response.json())
+        .catch(error => {
+            console.error('Error:', error);
+            return null;
+        });
+}
+
 
 function putTypenameById(type,id,list) {
     if (type == null || id == null || list == null) throw new Error("Tipo ou ID não identificado!")
@@ -158,23 +177,28 @@ function makeList(listname,list,name) {
     }
 }
 
-function createEditButton(where,type) {
+function createEditButton(where,type,extra) {
     let editbutton = document.createElement('button')
     editbutton.appendChild(document.createTextNode("Editar"))
     editbutton.setAttribute('id','editbutton')
-    editbutton.setAttribute('onclick','createEditField(this,\''+type+'\')')
+    let onclick = 'createEditField(this,\''+type+'\')'
+    if (extra !== null) {
+        onclick += ';'+extra
+    }
+    editbutton.setAttribute('onclick',onclick)
     where.appendChild(editbutton)
     return editbutton
 }
 function createEditField(button, type) {
     if (document.getElementById('editdiv') != null) return null;
+    const forbiddenfield = ['id','user','items']
     const where = button.parentNode
     const searcheditem = document.getElementById('searcheditem')
     let list = JSON.parse(searcheditem.innerText) //gambiarra? não sei se funciona
     let editdiv = document.createElement('div')
     editdiv.setAttribute('id','editdiv')
     for (const listKey in list) {
-        if(listKey !== 'id' && listKey !== 'user') addField(editdiv,listKey)
+        if(forbiddenfield.indexOf(listKey) === -1) addField(editdiv,listKey)
     }
     let submitbutton = document.createElement('button')
     submitbutton.setAttribute('onclick','submitEditTypename(this,\'' + type + '\')')
@@ -224,4 +248,28 @@ function addField(where,key) {
     textfield.setAttribute('id',key)
     textfield.setAttribute('placeholder',key)
     where.appendChild(textfield)
+}
+function createAddItemField() {
+    if (document.getElementById('additemfield') != null) return;
+    const editdiv = document.getElementById('editdiv')
+    editdiv.appendChild(document.createElement('br'))
+    let textfield = document.createElement('input')
+    textfield.setAttribute('id','additemfield')
+    textfield.setAttribute('type','text')
+    textfield.setAttribute('placeholder', 'Nome do Item')
+    let submitbutton = document.createElement('button')
+    submitbutton.appendChild(document.createTextNode('Adicionar Item'))
+    submitbutton.setAttribute('type','button')
+    submitbutton.setAttribute('onclick','addItem()')
+    submitbutton.setAttribute('id','submititembutton')
+    editdiv.appendChild(textfield)
+    editdiv.appendChild(submitbutton)
+}
+
+function addItem() {
+    const textfield = document.getElementById('additemfield')
+    const typename = 'recipes'
+    const value = textfield.value
+    const id = document.getElementById('searcheditem').getAttribute('dbid')
+    let posted = postTypenameById(typename,id,value)
 }

@@ -6,6 +6,7 @@ import br.ufrn.imd.cbm.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +37,18 @@ public class ItemService {
     public Item findItemById(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Item não encontrado"));
+    }
+    public Item findItemByName(String name) {
+        return itemRepository.findByName(name).orElseThrow(() -> new RuntimeException("Item " + name + " não encontrado"));
+    }
+
+
+    public List<Item> findAllInList(List<String> names) {
+        ArrayList<Item> items = new ArrayList<>();
+        for (String name : names) {
+            items.add(findItemByName(name));
+        }
+        return items;
     }
 
     public List<Item> findAllItems() {
