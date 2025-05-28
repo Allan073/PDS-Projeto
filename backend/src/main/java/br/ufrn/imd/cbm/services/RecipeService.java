@@ -31,6 +31,9 @@ public class RecipeService {
 
     public void updateRecipe(Long id, CreateRecipeDTO createRecipeDTO) {
         Recipe updatingrecipe = findRecipeById(id);
+        if (updatingrecipe == null) {
+            throw new RuntimeException("Raceita não encontrado");
+        }
         if (createRecipeDTO.name() != null) updatingrecipe.setName(createRecipeDTO.name());
         if (createRecipeDTO.items() != null) updatingrecipe.setItems(createRecipeDTO.items());
         if (createRecipeDTO.cost() != null) updatingrecipe.setCost(createRecipeDTO.cost());
