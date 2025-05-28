@@ -42,6 +42,10 @@ public class ItemService {
         return itemRepository.findByName(name).orElseThrow(() -> new RuntimeException("Item " + name + " não encontrado"));
     }
 
+    public void deleteItemById(Long id) {
+        Item item = findItemById(id);
+        itemRepository.delete(item);
+    }
 
     public List<Item> findAllInList(List<String> names) {
         ArrayList<Item> items = new ArrayList<>();
@@ -51,8 +55,13 @@ public class ItemService {
         return items;
     }
 
+
     public List<Item> findAllItems() {
         return itemRepository.findAll();
+    }
+
+    public List<Item> findOrderable() {
+        return itemRepository.findByOrderable(Boolean.TRUE);
     }
 
 }

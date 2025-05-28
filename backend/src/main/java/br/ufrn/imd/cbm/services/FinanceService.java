@@ -29,8 +29,8 @@ public class FinanceService {
                     totalIncome += operation.getAmount();
                     break;
                 case FinancialMovement.OUTGOING:
-                    total += operation.getAmount();
-                    totalIncome += operation.getAmount();
+                    total -= operation.getAmount();
+                    totalExpense += operation.getAmount();
                     break;
                 default: break;
             }

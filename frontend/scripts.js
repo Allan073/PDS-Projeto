@@ -216,6 +216,7 @@ function submitEditTypename(button,type) {
 }
 function readFields(where) {
     let nodelist = where.childNodes
+    let radioseen = []
     let valuelist = {}
     nodelist.forEach((nodelistKey) => {
         if(nodelistKey.type === 'text') {
@@ -229,6 +230,10 @@ function readFields(where) {
             else {
                 valuelist[key] = Number(nodelistKey.value)
             }
+        }
+        if(nodelistKey.type === 'radio' && radioseen.indexOf(nodelistKey.name) === -1 ) {
+            radioseen.push(nodelistKey.name)
+            valuelist[nodelistKey.name] = document.querySelector("input[type='radio'][name=" +nodelistKey.name+"]:checked").id
         }
     })
     valuelist = JSON.stringify(valuelist)
@@ -250,6 +255,18 @@ function addField(where,key,type) {
     textfield.setAttribute('id',key)
     textfield.setAttribute('placeholder',key)
     where.appendChild(textfield)
+}
+
+function addRadio(where,key,name) {
+    let radio = document.createElement('input')
+    let label = document.createElement('label')
+    label.setAttribute('for',key)
+    label.innerText = key
+    radio.setAttribute('type','radio')
+    radio.setAttribute('id',key)
+    radio.setAttribute('name',name)
+    where.appendChild(label)
+    where.appendChild(radio)
 }
 
 function createAddItemField(type) {
@@ -287,7 +304,6 @@ function createDeleteButton(where,type) {
 }
 
 function deleteItem(button, type) {
-    const editdiv = button.parentNode
     const id = document.getElementById('searcheditem').getAttribute('dbid')
     if(window.confirm('Este '+ type + 'será deletado permanentemente')) {
         let rv = deleteTypenameById(type, id)
