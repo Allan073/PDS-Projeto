@@ -52,7 +52,7 @@ public class Agent {
 
 
         Map<String, Object> map = Map.of(
-            "model", "mistralai/devstral-small:free",
+            "model", "nousresearch/deephermes-3-mistral-24b-preview:free",
             "messages", List.of(
                 Map.of(
                     "role","user",
