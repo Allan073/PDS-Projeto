@@ -3,6 +3,7 @@ package br.ufrn.imd.cbm.controllers;
 import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.annotations.AnyAuthed;
 import br.ufrn.imd.cbm.dtos.OrderDTO;
+import br.ufrn.imd.cbm.exceptions.InvalidArgumentException;
 import br.ufrn.imd.cbm.exceptions.NotFoundException;
 import br.ufrn.imd.cbm.models.Order;
 import br.ufrn.imd.cbm.models.User;
@@ -28,7 +29,7 @@ public class OrderController {
              orderService.createOrder(orderDTO, user);
              return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
          }
-         catch (NotFoundException e) {
+         catch (InvalidArgumentException | NotFoundException e) {
              return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
          }
     }

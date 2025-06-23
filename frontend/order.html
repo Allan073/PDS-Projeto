@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <title>CBM - Pedidos</title>
 </head>
+<style type="text/css">
+    div.itemsection {display:none}
+</style>
 <body onload="loadItems()">
 <button type="button" onclick="createCreationField()">Criar Pedido</button>
 <div id="creatediv">
+    <div id="itemssection" class="itemsection">
+        <p>Itens disponíveis:</p>
+        <ul id="creationlist" class="creationlist">
+        </ul>
+        <div>
+            <label for="selectitemtext">Selecione um item:</label><input type="text" id="selectitemtext">
+            <button type="button" onclick="addToSelectedList()">Adicionar Item</button>
+        </div>
+        <p>Itens selecionados:</p>
+        <ul id="selecteditems"></ul>
+    </div>
 </div>
 <p>Pedidos cadastrados:</p>
 <ul id="itemlist"></ul>
@@ -17,8 +31,9 @@
 </div>
 <script src="scripts.js"></script>
 <script>
-    function Order(description) {
+    function Order(description, items) {
         this.description = description
+        this.items = items;
     }
 
     async function loadItems() {
@@ -28,9 +43,25 @@
         let list = getTypenameById(type,path).then((data) => {
             makeList('itemlist',data,name)
         }).catch(() => console.log("CAIU!"))
-
+    }
+    function getItems() {
+        const type = 'items'
+        const path = 'orderable'
+        const name = 'id'
+        let list = getTypenameById(type,path).then((data) => {
+            makeList('creationlist',data,name)
+            const ul = document.getElementById('creationlist')
+            const nodelist = ul.childNodes
+            console.log(nodelist)
+            nodelist.forEach((nodelistkey) => {
+                if(nodelistkey.nodeName !== '#text') {
+                    nodelistkey.id = nodelistkey.id.replace('li', 'search')
+                }
+            })
+        }).catch(() => console.log("FALHOU ITENS!"))
 
     }
+
     function searchItem() {
         //quebrar essa func em pedaços menores depois
         const ul = document.getElementById('itemlist')
@@ -62,11 +93,23 @@
     function submitNew() {
         const creatediv = document.getElementById('creatediv')
         const type = 'orders'
+        const itemlist = document.getElementById('selecteditems').childNodes
+        const items = []
+        itemlist.forEach((nodelistkey) => {
+            if(nodelistkey.nodeName !== '#text') {
+                items.push(Number(nodelistkey.getAttribute('dbid')))
+            }
+        })
         let valuelist = readFields(creatediv)
+        let unjsond = JSON.parse(valuelist)
+        unjsond['items'] = items
+        valuelist = JSON.stringify(unjsond)
         postTypename(type,valuelist)
     }
 
     function createCreationField() {
+        getItems()
+        document.getElementById('itemssection').style.display = 'block';
         const dummyItem = new Order(null,null)
         const createDiv = document.getElementById('creatediv')
         const forbiddenfield = ['id','items']
@@ -82,8 +125,13 @@
         createDiv.appendChild(submitbutton)
     }
 
-
-
+    function addToSelectedList() {
+        const to = document.getElementById('selecteditems')
+        const searchbox = document.getElementById('selectitemtext')
+        const text = searchbox.value
+        const li = document.getElementById('search' + text)
+        to.appendChild(li)
+    }
 </script>
 </body>
 </html>

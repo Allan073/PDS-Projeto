@@ -56,6 +56,13 @@ public class ItemController {
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 
+    @AnyAuthed
+    @GetMapping("/orderable")
+    public ResponseEntity<List<Item>> getOrderableItems() {
+        List<Item> items = itemService.findOrderable();
+        return ResponseEntity.status(HttpStatus.OK).body(items);
+    }
+
     @AdminOnly
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteItemById(@PathVariable Long id) {

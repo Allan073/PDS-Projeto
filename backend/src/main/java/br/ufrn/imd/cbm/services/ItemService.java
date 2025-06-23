@@ -82,6 +82,9 @@ public class ItemService {
     public List<Item> findAllItems() {
         return itemRepository.findAll();
     }
+    public List<Item> findOrderable() {
+        return itemRepository.findByOrderable(Boolean.TRUE);
+    }
 
     public List<Item> findAllById(List<Long> ids) throws NotFoundException {
         List<Item> items = itemRepository.findAllById(ids);

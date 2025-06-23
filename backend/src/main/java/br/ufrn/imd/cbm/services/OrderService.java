@@ -27,7 +27,7 @@ public class OrderService {
     @Autowired
     private OperationService operationService;
 
-    public void createOrder(OrderDTO OrderDTO, User user) throws NotFoundException {
+    public void createOrder(OrderDTO OrderDTO, User user) throws InvalidArgumentException, NotFoundException {
         try {
             ArrayList<Item> items = new ArrayList<>(itemService.findAllById(OrderDTO.items()));
             Order newOrder = Order.builder()
@@ -39,6 +39,12 @@ public class OrderService {
                     .totalPrice(calcTotalPrice(items))
                     .build();
             orderRepository.save(newOrder);
+            try {
+                operationService.createFromOrder(newOrder);
+            } catch (InvalidArgumentException e) {
+                deleteOrder(newOrder.getId(),newOrder.getUser());
+                throw e;
+            }
         } catch (NotFoundException e) {
             throw e;
         }
