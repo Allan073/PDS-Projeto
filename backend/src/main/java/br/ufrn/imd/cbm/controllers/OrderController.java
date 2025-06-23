@@ -3,6 +3,7 @@ package br.ufrn.imd.cbm.controllers;
 import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.annotations.AnyAuthed;
 import br.ufrn.imd.cbm.dtos.OrderDTO;
+import br.ufrn.imd.cbm.exceptions.NotFoundException;
 import br.ufrn.imd.cbm.models.Order;
 import br.ufrn.imd.cbm.models.User;
 import br.ufrn.imd.cbm.services.OrderService;
@@ -22,36 +23,49 @@ public class OrderController {
 
     @AnyAuthed
     @PostMapping
-    public ResponseEntity<Void> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
-        orderService.createOrder(orderDTO, user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @AnyAuthed
-    @PostMapping("/{orderId}")
-    public ResponseEntity<String> addItemToOrder(@PathVariable Long orderId, @RequestBody String itemname) {
-        orderService.addItemToOrder(orderId, itemname);
-        return new ResponseEntity<>("Item adicionado com sucesso",HttpStatus.OK);
+    public ResponseEntity<String> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
+         try {
+             orderService.createOrder(orderDTO, user);
+             return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
+         }
+         catch (NotFoundException e) {
+             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+         }
     }
 
     @AnyAuthed
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long orderId, @AuthenticationPrincipal User user) {
-        Order order = orderService.findOrderById(orderId, user);
-        return ResponseEntity.status(HttpStatus.OK).body(order);
+        try {
+            Order order = orderService.findOrderById(orderId, user);
+            return ResponseEntity.status(HttpStatus.OK).body(order);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @AnyAuthed
     @PutMapping("/{orderId}")
     public ResponseEntity<String> updateOrderById(@PathVariable Long orderId, @RequestBody OrderDTO OrderDTO, @AuthenticationPrincipal User user) {
-        orderService.updateOrder(orderId,OrderDTO,user);
-        return new ResponseEntity<>("Pedido atualizado com sucesso",HttpStatus.OK);
+        try {
+            orderService.updateOrder(orderId,OrderDTO,user);
+            return new ResponseEntity<>("Pedido atualizado com sucesso",HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @AnyAuthed
     @DeleteMapping("/{orderId}") public ResponseEntity<String> deleteOrderById(@PathVariable Long orderId, @AuthenticationPrincipal User user) {
-        orderService.deleteOrder(orderId, user);
-        return new ResponseEntity<>("Pedido apagado com sucesso",HttpStatus.NO_CONTENT);
+        try {
+            orderService.deleteOrder(orderId, user);
+            return new ResponseEntity<>("Pedido apagado com sucesso", HttpStatus.NO_CONTENT);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @AnyAuthed

@@ -2,6 +2,9 @@ package br.ufrn.imd.cbm.services;
 
 import br.ufrn.imd.cbm.dtos.OrderDTO;
 import br.ufrn.imd.cbm.enums.DeliveryState;
+import br.ufrn.imd.cbm.exceptions.InvalidArgumentException;
+
+import br.ufrn.imd.cbm.exceptions.NotFoundException;
 import br.ufrn.imd.cbm.models.Item;
 import br.ufrn.imd.cbm.models.Order;
 import br.ufrn.imd.cbm.models.User;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,30 +27,25 @@ public class OrderService {
     @Autowired
     private OperationService operationService;
 
-    public void createOrder(OrderDTO OrderDTO, User user) {
-        Order newOrder = Order.builder()
-                .user(user)
-                .orderDate(LocalDate.now())
-                .description(OrderDTO.description())
-                .orderState(DeliveryState.ORDER_REQUESTED)
-                .totalPrice((double) 0)
-                .build();
-        orderRepository.save(newOrder);
-    }
-
-    public void addItemToOrder(Long id, String itemname) {
-        Order order = findOrderById(id);
-        Item item = itemService.findItemByName(itemname);
-        if (item.isOrderable()) {
-            order.getItems().add(item);
-            calcTotalPrice(order);
-            orderRepository.save(order);
+    public void createOrder(OrderDTO OrderDTO, User user) throws NotFoundException {
+        try {
+            ArrayList<Item> items = new ArrayList<>(itemService.findAllById(OrderDTO.items()));
+            Order newOrder = Order.builder()
+                    .user(user)
+                    .orderDate(LocalDate.now())
+                    .description(OrderDTO.description())
+                    .items(items)
+                    .orderState(DeliveryState.ORDER_REQUESTED)
+                    .totalPrice(calcTotalPrice(items))
+                    .build();
+            orderRepository.save(newOrder);
+        } catch (NotFoundException e) {
+            throw e;
         }
-        else throw new RuntimeException("Item não encontrado!");
     }
     
-    public Order findOrderById(Long orderId, User user) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+    public Order findOrderById(Long orderId, User user) throws NotFoundException {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Pedido não encontrado!"));
         if (user.isAdmin() || order.getUser().getId().equals(user.getId())) {
             return order;
         }
@@ -55,23 +54,22 @@ public class OrderService {
         }
     }
 
-    public Order findOrderById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+    public Order findOrderById(Long orderId) throws NotFoundException{
+        return orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Pedido não encontrado!"));
     }
 
-    public void updateOrder(Long orderId, OrderDTO OrderDTO, User user) {
+    public void updateOrder(Long orderId, OrderDTO OrderDTO, User user) throws InvalidArgumentException, NotFoundException {
         Order updatingorder = findOrderById(orderId, user);
         if (updatingorder.getOrderState().getValue() == 3) {
-            throw new RuntimeException("Pedidos já entregues não podem ser atualizados!");
+            throw new InvalidArgumentException("Pedidos já entregues não podem ser atualizados!");
         }
         if (OrderDTO.description() != null) updatingorder.setDescription(OrderDTO.description());
-        if (OrderDTO.orderstate() != null) updatingorder.setOrderState(OrderDTO.orderstate());
+        if (OrderDTO.orderstate() < 0 || OrderDTO.orderstate() > 3) throw new InvalidArgumentException("Valor de estado de entrega inválido!");
+        updatingorder.setOrderState(DeliveryState.fromValue(OrderDTO.orderstate()));
         orderRepository.save(updatingorder);
-        if (OrderDTO.orderstate() ==  DeliveryState.ORDER_FINISHED)
-            operationService.createFromOrder(updatingorder);
     }
 
-    public void deleteOrder(Long orderId, User user) {
+    public void deleteOrder(Long orderId, User user) throws NotFoundException {
         Order order = findOrderById(orderId, user);
         if (order.getOrderState().getValue() == 3) {
             throw new RuntimeException("Pedidos já entregues não podem ser deletados!");
@@ -89,13 +87,12 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public void calcTotalPrice(Order order) {
+    public double calcTotalPrice(List<Item> items) {
         double workingtotal = 0;
-        for (Item item : order.getItems()) {
+        for (Item item : items) {
             workingtotal += item.getPrice();
         }
-        order.setTotalPrice(workingtotal);
+        return workingtotal;
     }
-
 
 }

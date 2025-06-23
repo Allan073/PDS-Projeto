@@ -12,14 +12,16 @@ import br.ufrn.imd.cbm.repositories.OperationRepository;
 @Service
 public class FinanceService {
     @Autowired
-    private OperationRepository repository;
+    private OperationService operationService;
 
     @Autowired
     private Agent agent;
 
     public void generateReport() {
-        List<Operation> operations = repository.findAll();
-
+        List<Operation> operations = operationService.findAllOperations();
+        if (operations.isEmpty()) {
+            return;
+        }
         double total=0, totalIncome=0, totalExpense=0;
 
         for(Operation operation : operations){

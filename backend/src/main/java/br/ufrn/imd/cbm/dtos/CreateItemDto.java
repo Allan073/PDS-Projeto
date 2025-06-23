@@ -4,6 +4,7 @@ public record CreateItemDto(
         String name,
         String description,
         Integer quantity,
-        Double price
+        Double price,
+        Boolean orderable
 ) {
 }

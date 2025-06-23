@@ -19,16 +19,20 @@ public class OperationController {
 
     @AdminOnly
     @PostMapping
-    public ResponseEntity<Void> createOperation(@RequestBody CreateOperationDto createOperationDto) {
+    public ResponseEntity<String> createOperation(@RequestBody CreateOperationDto createOperationDto) {
         operationService.createOperation(createOperationDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("Operação criada com sucesso!", HttpStatus.CREATED);
     }
 
     @AdminOnly
     @GetMapping("/{id}")
     public ResponseEntity<Operation> getOperationById(@PathVariable Long id) {
+        try {
         Operation operation = operationService.findOperationById(id);
         return ResponseEntity.status(HttpStatus.OK).body(operation);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @AdminOnly

@@ -28,15 +28,25 @@ public class ItemController {
     @AnyAuthed
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItemById(@PathVariable Long id) {
-        Item item = itemService.findItemById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(item);
+        try {
+            Item item = itemService.findItemById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(item);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @AdminOnly
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateItem(@PathVariable Long id, @RequestBody CreateItemDto createItemDto) {
-        itemService.updateItemById(id, createItemDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<String> updateItem(@PathVariable Long id, @RequestBody CreateItemDto createItemDto) {
+        try {
+            itemService.updateItemById(id, createItemDto);
+            return new ResponseEntity<>("Item atualizado com sucesso!", HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @AdminOnly
@@ -49,14 +59,13 @@ public class ItemController {
     @AdminOnly
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteItemById(@PathVariable Long id) {
-        itemService.deleteItemById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            itemService.deleteItemById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @AnyAuthed
-    @GetMapping("/orderable")
-    public ResponseEntity<List<Item>> getOrderableItems() {
-        List<Item> items = itemService.findOrderable();
-        return ResponseEntity.status(HttpStatus.OK).body(items);
-    }
 }

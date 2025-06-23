@@ -2,6 +2,7 @@ package br.ufrn.imd.cbm.controllers;
 
 import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.dtos.CreateRecipeDTO;
+import br.ufrn.imd.cbm.exceptions.NotFoundException;
 import br.ufrn.imd.cbm.models.Recipe;
 import br.ufrn.imd.cbm.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,28 +28,47 @@ public class RecipeController {
     @AdminOnly
     @PostMapping("/{id}")
     public ResponseEntity<String> addItemToRecipe(@PathVariable Long id, @RequestBody String itemname) {
-        recipeService.addItemToRecipe(id, itemname);
-        return new ResponseEntity<>("Item adicionado com sucesso",HttpStatus.OK);
+        try {
+            recipeService.addItemToRecipe(id, itemname);
+            return new ResponseEntity<>("Item adicionado com sucesso", HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @AdminOnly
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
-        Recipe recipe = recipeService.findRecipeById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(recipe);
+        try {
+            Recipe recipe = recipeService.findRecipeById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(recipe);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @AdminOnly
     @PutMapping("/{id}")
     public ResponseEntity<String> updateRecipeById(@PathVariable Long id, @RequestBody CreateRecipeDTO createRecipeDTO) {
-        recipeService.updateRecipe(id,createRecipeDTO);
-        return new ResponseEntity<>("Receita atualizada com sucesso",HttpStatus.OK);
+        try {
+            recipeService.updateRecipe(id, createRecipeDTO);
+            return new ResponseEntity<>("Receita atualizada com sucesso", HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @AdminOnly
     @DeleteMapping("/{id}") public ResponseEntity<String> deleteRecipeById(@PathVariable Long id) {
-        recipeService.deleteRecipe(id);
-        return new ResponseEntity<>("Receita deletada com sucesso",HttpStatus.NO_CONTENT);
+        try {
+            recipeService.deleteRecipe(id);
+            return new ResponseEntity<>("Receita deletada com sucesso", HttpStatus.NO_CONTENT);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @AdminOnly

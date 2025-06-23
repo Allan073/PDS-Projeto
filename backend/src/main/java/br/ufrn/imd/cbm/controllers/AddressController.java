@@ -3,6 +3,8 @@ package br.ufrn.imd.cbm.controllers;
 import br.ufrn.imd.cbm.annotations.AdminOnly;
 import br.ufrn.imd.cbm.annotations.AnyAuthed;
 import br.ufrn.imd.cbm.dtos.AddressDTO;
+import br.ufrn.imd.cbm.exceptions.InvalidArgumentException;
+import br.ufrn.imd.cbm.exceptions.NotFoundException;
 import br.ufrn.imd.cbm.models.Address;
 import br.ufrn.imd.cbm.models.User;
 import br.ufrn.imd.cbm.services.AddressService;
@@ -21,9 +23,13 @@ public class AddressController {
     private AddressService addressService;
     @AnyAuthed
     @PostMapping
-    public ResponseEntity<Void> createAddress(@RequestBody AddressDTO address, @AuthenticationPrincipal User user) {
-        addressService.createAddress(address,user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<String> createAddress(@RequestBody AddressDTO address, @AuthenticationPrincipal User user) {
+        try {
+            addressService.createAddress(address,user);
+            return new ResponseEntity<>("Endereço criado com sucesso!",HttpStatus.CREATED);
+        } catch (InvalidArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @AnyAuthed
@@ -32,23 +38,35 @@ public class AddressController {
             @PathVariable Long addressId,
             @AuthenticationPrincipal User user
     ) {
-        Address address = addressService.findAddressById(addressId, user);
-        return ResponseEntity.status(HttpStatus.OK).body(address);
+        try {
+            Address address = addressService.findAddressById(addressId, user);
+            return ResponseEntity.status(HttpStatus.OK).body(address);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @AnyAuthed
     @PutMapping("/{addressId}")
     public ResponseEntity<String> updateAddressById(@PathVariable Long addressId, @RequestBody AddressDTO address,
                                                     @AuthenticationPrincipal User user) {
-        addressService.updateAddress(addressId,address, user);
-        return new ResponseEntity<>("Endereço atualizado com sucesso",HttpStatus.OK);
+        try {
+            addressService.updateAddress(addressId,address, user);
+            return new ResponseEntity<>("Endereço atualizado com sucesso",HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @AnyAuthed
     @DeleteMapping("/{addressId}") public ResponseEntity<String> deleteAddressById(@PathVariable Long addressId,
                                                                                    @AuthenticationPrincipal User user) {
-        addressService.deleteAddress(addressId, user);
-        return new ResponseEntity<>("Endereço apagado com sucesso",HttpStatus.NO_CONTENT);
+        try {
+            addressService.deleteAddress(addressId, user);
+            return new ResponseEntity<>("Endereço apagado com sucesso",HttpStatus.NO_CONTENT);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @AnyAuthed
