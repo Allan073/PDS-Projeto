@@ -191,7 +191,7 @@ function createEditButton(where,type,extra) {
 }
 function createEditField(button, type) {
     if (document.getElementById('editdiv') != null) return null;
-    const forbiddenfield = ['id','user','items']
+    const forbiddenfield = ['id','user','items','orderDate','totalPrice']
     const where = button.parentNode
     createDeleteButton(where,type)
     const searcheditem = document.getElementById('searcheditem')

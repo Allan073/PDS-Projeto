@@ -1,10 +1,10 @@
 package br.ufrn.imd.cbm.controllers;
 
-import br.ufrn.imd.cbm.annotations.AdminOnly;
-import br.ufrn.imd.cbm.annotations.AnyAuthed;
-import br.ufrn.imd.cbm.dtos.CreateItemDto;
-import br.ufrn.imd.cbm.models.Item;
-import br.ufrn.imd.cbm.services.ItemService;
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.annotations.AnyAuthed;
+import br.ufrn.imd.framework.dtos.CreateItemDto;
+import br.ufrn.imd.framework.models.Item;
+import br.ufrn.imd.framework.services.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

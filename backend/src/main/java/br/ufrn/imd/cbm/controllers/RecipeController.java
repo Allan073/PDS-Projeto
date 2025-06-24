@@ -1,10 +1,10 @@
 package br.ufrn.imd.cbm.controllers;
 
-import br.ufrn.imd.cbm.annotations.AdminOnly;
-import br.ufrn.imd.cbm.dtos.CreateRecipeDTO;
-import br.ufrn.imd.cbm.exceptions.NotFoundException;
-import br.ufrn.imd.cbm.models.Recipe;
-import br.ufrn.imd.cbm.services.RecipeService;
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.dtos.CreateRecipeDTO;
+import br.ufrn.imd.framework.exceptions.NotFoundException;
+import br.ufrn.imd.framework.models.Recipe;
+import br.ufrn.imd.framework.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

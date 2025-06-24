@@ -1,13 +1,14 @@
 package br.ufrn.imd.cbm.controllers;
 
-import br.ufrn.imd.cbm.annotations.AdminOnly;
-import br.ufrn.imd.cbm.annotations.AnyAuthed;
-import br.ufrn.imd.cbm.annotations.CustomerOnly;
-import br.ufrn.imd.cbm.dtos.CreateUserDto;
-import br.ufrn.imd.cbm.dtos.LoginUserDto;
-import br.ufrn.imd.cbm.dtos.RecoveryJwtTokenDto;
-import br.ufrn.imd.cbm.models.User;
-import br.ufrn.imd.cbm.services.UserService;
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.annotations.AnyAuthed;
+import br.ufrn.imd.framework.annotations.CustomerOnly;
+import br.ufrn.imd.framework.dtos.CreateUserDto;
+import br.ufrn.imd.framework.dtos.LoginUserDto;
+import br.ufrn.imd.framework.dtos.RecoveryJwtTokenDto;
+import br.ufrn.imd.framework.exceptions.NotFoundException;
+import br.ufrn.imd.framework.models.User;
+import br.ufrn.imd.framework.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,29 +62,45 @@ public class UserController {
     @AdminOnly
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
-        User user = userService.findUserById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        try {
+            User user = userService.findUserById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @AdminOnly
     @GetMapping("/find-by-email")
     public ResponseEntity<User> findUserByEmail(@RequestParam String email){
-        User user = userService.findUserByEmail(email);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        try {
+            User user = userService.findUserByEmail(email);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @AnyAuthed
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUserById(@PathVariable Long id, @RequestBody CreateUserDto user){
-        userService.updateUserById(id,user);
-        return new ResponseEntity<>("User atualizado com sucesso", HttpStatus.OK);
+        try {
+            userService.updateUserById(id,user);
+            return new ResponseEntity<>("User atualizado com sucesso", HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @AnyAuthed
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable Long id){
-        userService.deleteUserById(id);
-        return new ResponseEntity<>("User deletado com sucesso", HttpStatus.NO_CONTENT);
+        try {
+            userService.deleteUserById(id);
+            return new ResponseEntity<>("User deletado com sucesso", HttpStatus.NO_CONTENT);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @AdminOnly
@@ -103,7 +120,12 @@ public class UserController {
     @AnyAuthed
     @DeleteMapping("/self")
     public ResponseEntity<String> deleteSelfUser(@AuthenticationPrincipal User user){
-        userService.deleteUserById(user.getId());
-        return new ResponseEntity<>("User deletado com sucesso", HttpStatus.NO_CONTENT);
+        try {
+            userService.deleteUserById(user.getId());
+            return new ResponseEntity<>("User deletado com sucesso", HttpStatus.NO_CONTENT);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Se você está vendo este erro algo catastrófico " +
+                    "aconteceu, e sua conta não foi encontrada no repositório.");
+        }
     }
 }

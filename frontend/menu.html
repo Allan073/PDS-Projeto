@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CBM - Itens</title>
+</head>
+<body onload="loadItems()">
+<p>Itens cadastrados:</p>
+<ul id="itemlist"></ul>
+</body>
+<script src="scripts.js">
+</script>
+<script>
+
+  async function loadItems() {
+    const type = 'items'
+    const id = 'orderable'
+    const name = 'name'
+    let list = getTypenameById(type,id).then((data) => {
+      makeList('itemlist',data,name)
+    })
+
+
+  }
+</script>
+</html>

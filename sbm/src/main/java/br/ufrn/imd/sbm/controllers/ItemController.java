@@ -1,0 +1,78 @@
+package br.ufrn.imd.sbm.controllers;
+
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.annotations.AnyAuthed;
+import br.ufrn.imd.framework.dtos.CreateItemDto;
+import br.ufrn.imd.framework.models.Item;
+import br.ufrn.imd.framework.services.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/items")
+public class ItemController {
+    @Autowired
+    private ItemService itemService;
+
+    @AdminOnly
+    @PostMapping
+    public ResponseEntity<Void> createItem(@RequestBody CreateItemDto createItemDto) {
+        itemService.createItem(createItemDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @AnyAuthed
+    @GetMapping("/{id}")
+    public ResponseEntity<Item> getItemById(@PathVariable Long id) {
+        try {
+            Item item = itemService.findItemById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(item);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @AdminOnly
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateItem(@PathVariable Long id, @RequestBody CreateItemDto createItemDto) {
+        try {
+            itemService.updateItemById(id, createItemDto);
+            return new ResponseEntity<>("Item atualizado com sucesso!", HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @AdminOnly
+    @GetMapping("/all")
+    public ResponseEntity<List<Item>> getAllItems() {
+        List<Item> items = itemService.findAllItems();
+        return ResponseEntity.status(HttpStatus.OK).body(items);
+    }
+
+    @AnyAuthed
+    @GetMapping("/orderable")
+    public ResponseEntity<List<Item>> getOrderableItems() {
+        List<Item> items = itemService.findOrderable();
+        return ResponseEntity.status(HttpStatus.OK).body(items);
+    }
+
+    @AdminOnly
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteItemById(@PathVariable Long id) {
+        try {
+            itemService.deleteItemById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+}

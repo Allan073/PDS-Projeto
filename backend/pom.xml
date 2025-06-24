@@ -77,7 +77,13 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>br.ufrn.imd</groupId>
+			<artifactId>framework</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>

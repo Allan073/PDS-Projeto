@@ -1,9 +1,9 @@
 package br.ufrn.imd.cbm.controllers;
 
-import br.ufrn.imd.cbm.annotations.AdminOnly;
-import br.ufrn.imd.cbm.dtos.CreateOperationDto;
-import br.ufrn.imd.cbm.models.Operation;
-import br.ufrn.imd.cbm.services.OperationService;
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.dtos.CreateOperationDto;
+import br.ufrn.imd.framework.models.Operation;
+import br.ufrn.imd.framework.services.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

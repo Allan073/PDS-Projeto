@@ -1,13 +1,12 @@
 package br.ufrn.imd.cbm.controllers;
 
-import br.ufrn.imd.cbm.annotations.AdminOnly;
-import br.ufrn.imd.cbm.annotations.AnyAuthed;
-import br.ufrn.imd.cbm.dtos.OrderDTO;
-import br.ufrn.imd.cbm.exceptions.InvalidArgumentException;
-import br.ufrn.imd.cbm.exceptions.NotFoundException;
-import br.ufrn.imd.cbm.models.Order;
-import br.ufrn.imd.cbm.models.User;
-import br.ufrn.imd.cbm.services.OrderService;
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.annotations.AnyAuthed;
+import br.ufrn.imd.framework.dtos.OrderDTO;
+import br.ufrn.imd.framework.exceptions.NotFoundException;
+import br.ufrn.imd.framework.models.Order;
+import br.ufrn.imd.framework.models.User;
+import br.ufrn.imd.framework.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +25,10 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<String> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
          try {
-             orderService.createOrder(orderDTO, user);
+             orderService.createOperationFromOrder(orderService.createOrder(orderDTO, user));
              return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
          }
-         catch (InvalidArgumentException | NotFoundException e) {
+         catch (NotFoundException e) {
              return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
          }
     }
@@ -71,8 +70,8 @@ public class OrderController {
 
     @AnyAuthed
     @GetMapping("/alluser") public ResponseEntity<List<Order>> getAllUserOrders(@AuthenticationPrincipal User user) {
-        List<Order> orders = orderService.findAllUserOrders(user);
-        return ResponseEntity.status(HttpStatus.OK).body(orders);
+            List<Order> orders = orderService.findAllUserOrders(user);
+            return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
     @AdminOnly

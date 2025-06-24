@@ -1,13 +1,13 @@
 package br.ufrn.imd.cbm.controllers;
 
-import br.ufrn.imd.cbm.annotations.AdminOnly;
-import br.ufrn.imd.cbm.annotations.AnyAuthed;
-import br.ufrn.imd.cbm.dtos.AddressDTO;
-import br.ufrn.imd.cbm.exceptions.InvalidArgumentException;
-import br.ufrn.imd.cbm.exceptions.NotFoundException;
-import br.ufrn.imd.cbm.models.Address;
-import br.ufrn.imd.cbm.models.User;
-import br.ufrn.imd.cbm.services.AddressService;
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.annotations.AnyAuthed;
+import br.ufrn.imd.framework.dtos.AddressDTO;
+import br.ufrn.imd.framework.exceptions.InvalidArgumentException;
+import br.ufrn.imd.framework.exceptions.NotFoundException;
+import br.ufrn.imd.framework.models.Address;
+import br.ufrn.imd.framework.models.User;
+import br.ufrn.imd.framework.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class AddressController {
         try {
             addressService.createAddress(address,user);
             return new ResponseEntity<>("Endereço criado com sucesso!",HttpStatus.CREATED);
-        } catch (InvalidArgumentException e) {
+        } catch (InvalidArgumentException | NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

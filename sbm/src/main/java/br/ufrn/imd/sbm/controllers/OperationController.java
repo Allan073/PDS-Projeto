@@ -1,0 +1,44 @@
+package br.ufrn.imd.sbm.controllers;
+
+import br.ufrn.imd.framework.annotations.AdminOnly;
+import br.ufrn.imd.framework.dtos.CreateOperationDto;
+import br.ufrn.imd.framework.models.Operation;
+import br.ufrn.imd.framework.services.OperationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/transactions")
+public class OperationController {
+    @Autowired
+    private OperationService operationService;
+
+    @AdminOnly
+    @PostMapping
+    public ResponseEntity<String> createOperation(@RequestBody CreateOperationDto createOperationDto) {
+        operationService.createOperation(createOperationDto);
+        return new ResponseEntity<>("Operação criada com sucesso!", HttpStatus.CREATED);
+    }
+
+    @AdminOnly
+    @GetMapping("/{id}")
+    public ResponseEntity<Operation> getOperationById(@PathVariable Long id) {
+        try {
+        Operation operation = operationService.findOperationById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(operation);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @AdminOnly
+    @GetMapping("/all")
+    public ResponseEntity<List<Operation>> getAllOperations() {
+        List<Operation> operations = operationService.findAllOperations();
+        return ResponseEntity.status(HttpStatus.OK).body(operations);
+    }
+}
