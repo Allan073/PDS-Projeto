@@ -1,20 +1,17 @@
 package br.ufrn.imd.framework.ai;
 
 
+import br.ufrn.imd.framework.models.Operation;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import br.ufrn.imd.framework.models.Operation;
 
 @Component
 public class Agent {

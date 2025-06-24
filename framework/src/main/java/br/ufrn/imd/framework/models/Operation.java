@@ -1,13 +1,8 @@
 package br.ufrn.imd.framework.models;
 
 import br.ufrn.imd.framework.enums.FinancialMovement;
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 

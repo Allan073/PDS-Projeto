@@ -1,7 +1,10 @@
 package br.ufrn.imd.framework.models;
 
 import br.ufrn.imd.framework.enums.RoleName;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
