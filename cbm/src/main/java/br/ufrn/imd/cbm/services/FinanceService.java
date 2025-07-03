@@ -1,12 +1,15 @@
-package br.ufrn.imd.framework.services;
+package br.ufrn.imd.cbm.services;
 
-import br.ufrn.imd.framework.ai.Agent;
+import br.ufrn.imd.cbm.ai.OperationAgent;
 import br.ufrn.imd.framework.enums.FinancialMovement;
 import br.ufrn.imd.framework.models.Operation;
+import br.ufrn.imd.framework.services.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FinanceService {
@@ -14,7 +17,7 @@ public class FinanceService {
     private OperationService operationService;
 
     @Autowired
-    private Agent agent;
+    private OperationAgent operationAgent;
 
     public void generateReport() {
         List<Operation> operations = operationService.findAllOperations();
@@ -22,7 +25,6 @@ public class FinanceService {
             return;
         }
         double total=0, totalIncome=0, totalExpense=0;
-
         for(Operation operation : operations){
             switch(operation.getType()){
                 case FinancialMovement.INCOMING:
@@ -36,6 +38,10 @@ public class FinanceService {
                 default: break;
             }
         }
-        agent.report(total, totalIncome, totalExpense, operations);
+        Map<String,Double> totals = new HashMap<>();
+        totals.put("totalIncome", totalIncome);
+        totals.put("totalExpense", totalExpense);
+        totals.put("total", total);
+        operationAgent.report(totals, operations, null);
     }
 }

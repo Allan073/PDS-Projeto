@@ -4,6 +4,7 @@ import br.ufrn.imd.framework.dtos.OrderDTO;
 import br.ufrn.imd.framework.enums.DeliveryState;
 import br.ufrn.imd.framework.exceptions.InvalidArgumentException;
 import br.ufrn.imd.framework.exceptions.NotFoundException;
+import br.ufrn.imd.framework.interfaces.OrderStrategy;
 import br.ufrn.imd.framework.models.Item;
 import br.ufrn.imd.framework.models.Order;
 import br.ufrn.imd.framework.models.User;
@@ -18,15 +19,13 @@ import java.util.List;
 @Service
 public class OrderService {
     @Autowired
-    private UserService userService;
-    @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private ItemService itemService;
     @Autowired
     private OperationService operationService;
 
-    public Order createOrder(OrderDTO OrderDTO, User user) throws NotFoundException {
+    public Order createOrder(OrderDTO OrderDTO, User user, OrderStrategy orderStrategy) throws NotFoundException, InvalidArgumentException {
         try {
             ArrayList<Item> items = new ArrayList<>(itemService.findAllById(OrderDTO.items()));
             Order newOrder = Order.builder()
@@ -38,13 +37,14 @@ public class OrderService {
                     .totalPrice(calcTotalPrice(items))
                     .build();
             orderRepository.save(newOrder);
+            orderStrategy.payment(newOrder);
             return newOrder;
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | InvalidArgumentException e) {
             throw e;
         }
     }
 
-    public void createOperationFromOrder(Order order) throws NotFoundException, InvalidArgumentException {
+    public void createOperationFromOrder(Order order) throws InvalidArgumentException {
             try {
                 operationService.createFromOrder(order);
             } catch (InvalidArgumentException e) {

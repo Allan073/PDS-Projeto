@@ -10,6 +10,7 @@ import br.ufrn.imd.sbm.services.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,5 +68,17 @@ class SubscriptionController {
     public ResponseEntity<List<Subscription>> getAllSubscriptions() {
         List<Subscription> subscriptions = subscriptionService.findAllSubscriptions();
         return ResponseEntity.status(HttpStatus.OK).body(subscriptions);
+    }
+
+    @AdminOnly
+    @PostMapping("/send")
+    @Scheduled(fixedRate = 86400) //1 por dia
+    public ResponseEntity<String> sendSubscriptions() {
+        try {
+            subscriptionService.sendSubscriptions();
+            return ResponseEntity.status(HttpStatus.OK).body("Assinaturas enviadas!");
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>("Alguma assinatura possui objeto invalido!",HttpStatus.NOT_FOUND);
+        }
     }
 }

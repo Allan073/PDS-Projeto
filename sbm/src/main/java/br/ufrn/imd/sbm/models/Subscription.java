@@ -55,4 +55,5 @@ public class Subscription extends AbstractEntity {
     public void setLastSent(LocalDate lastSent) {
         this.lastSent = lastSent;
     }
+
 }

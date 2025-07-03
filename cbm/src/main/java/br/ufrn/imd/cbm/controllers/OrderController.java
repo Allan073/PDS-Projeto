@@ -1,5 +1,6 @@
 package br.ufrn.imd.cbm.controllers;
 
+import br.ufrn.imd.cbm.strategies.PaidOrderStrategy;
 import br.ufrn.imd.framework.annotations.AdminOnly;
 import br.ufrn.imd.framework.annotations.AnyAuthed;
 import br.ufrn.imd.framework.dtos.OrderDTO;
@@ -20,12 +21,13 @@ import java.util.List;
 public class OrderController {
     @Autowired
     private OrderService orderService;
-
+    @Autowired
+    private PaidOrderStrategy paidOrderStrategy;
     @AnyAuthed
     @PostMapping
     public ResponseEntity<String> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
          try {
-             orderService.createOperationFromOrder(orderService.createOrder(orderDTO, user));
+             orderService.createOperationFromOrder(orderService.createOrder(orderDTO, user, paidOrderStrategy));
              return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
          }
          catch (NotFoundException e) {

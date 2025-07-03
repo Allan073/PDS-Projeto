@@ -22,7 +22,6 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-
     @PostMapping("/login")
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
         RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);

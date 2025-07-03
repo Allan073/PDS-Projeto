@@ -7,6 +7,7 @@ import br.ufrn.imd.framework.exceptions.NotFoundException;
 import br.ufrn.imd.framework.models.Order;
 import br.ufrn.imd.framework.models.User;
 import br.ufrn.imd.framework.services.OrderService;
+import br.ufrn.imd.sbm.strategies.NoPaymentStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +22,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @AnyAuthed
-    @PostMapping
-    public ResponseEntity<String> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
-         try {
-             orderService.createOrder(orderDTO, user);
-             return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
-         }
-         catch (NotFoundException e) {
-             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-         }
-    }
+    //Sem create aqui.
 
     @AnyAuthed
     @GetMapping("/{orderId}")

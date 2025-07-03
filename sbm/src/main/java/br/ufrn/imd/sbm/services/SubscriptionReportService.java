@@ -27,6 +27,9 @@ public class SubscriptionReportService {
             totalSubscriptions += subscriptionTypeCount;
         }
         totalAvg = totalIncoming/totalSubscriptions;
-        agent.report(summedPrices, totalIncoming, totalAvg);
+        Map<String,Double> totals = new HashMap<>();
+        totals.put("totalAvg", totalAvg);
+        totals.put("totalIncoming", totalIncoming);
+        agent.report(totals, null, summedPrices);
     }
 }

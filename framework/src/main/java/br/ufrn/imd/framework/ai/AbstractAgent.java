@@ -14,38 +14,29 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class Agent {
-    private String key;
+public abstract class AbstractAgent<Type> {
+    private final String key;
 
-    public Agent(Environment env) {
+    public AbstractAgent(Environment env) {
         this.key = env.getProperty("ai.key");
     };
 
-    public void report(double total, double totalIncome, double totalExpense, List<Operation> operations) {
+    public void report(Map<String,Double> totals, List<Type> list, Map<Type,Double> map) {
         HttpClient client = HttpClient.newHttpClient();
         ObjectMapper mapper = new ObjectMapper();
 
         StringBuilder prompt = new StringBuilder();
-    prompt.append(String.format(
-        "Relatório de valores:\n" +
-        "- Total: %.2f\n" +
-        "- Total Income: %.2f\n" +
-        "- Total Expense: %.2f\n" +
-        "Por favor, gere um relatório detalhado com essas informações.\n\n",
-        total, totalIncome, totalExpense
-    ));
-    
-    prompt.append("Lista de operações:\n");
-    
-    for (Operation op : operations) {
-        prompt.append(String.format("- Tipo: %s | Valor: %.2f | Data: %s\n", op.getType(), op.getAmount(), op.getDate()));
+        promptBuilderTotals(totals, prompt);
+        promptBuilderList(list, prompt);
+        String finalPrompt = prompt.toString();
+        queryAI(finalPrompt, mapper, client);
     }
-    
-    // Aqui você pode utilizar o prompt na requisição
-    String finalPrompt = prompt.toString();
 
-    queryAI(finalPrompt, mapper, client);
-    }
+    abstract protected void promptBuilderTotals(Map<String,Double> totals, StringBuilder prompt);
+
+    abstract protected void promptBuilderList(List<Type> list, StringBuilder prompt);
+
+    abstract protected void promptBuilderMap(Map<Type, Double> map, StringBuilder prompt);
 
     protected void queryAI(String finalPrompt, ObjectMapper mapper, HttpClient client) {
         Map<String, Object> map = Map.of(
