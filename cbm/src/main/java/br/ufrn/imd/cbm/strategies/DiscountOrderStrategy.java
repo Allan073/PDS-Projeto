@@ -11,15 +11,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaidOrderStrategy implements OrderStrategy {
+public class DiscountOrderStrategy implements OrderStrategy {
+    private double discount;
+
     @Autowired
     private OperationService operationService;
+
+    public DiscountOrderStrategy() {
+    }
+
+    public DiscountOrderStrategy(double discount) {
+        this.discount = discount;
+    }
 
     @Override
     public void payment(Order order) throws NotFoundException {
         try {
             operationService.createOperation(
-                    new CreateOperationDto(FinancialMovement.INCOMING,"order " + order.getId(), order.getTotalPrice())
+                    new CreateOperationDto(FinancialMovement.INCOMING,
+                            "order " + order.getId() + " desconto: " + discount*100 +"%",
+                            order.getTotalPrice()-order.getTotalPrice()*discount)
             );
         }
         catch (InvalidArgumentException e) {

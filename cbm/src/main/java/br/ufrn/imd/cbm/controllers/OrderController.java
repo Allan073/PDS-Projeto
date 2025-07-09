@@ -1,10 +1,12 @@
 package br.ufrn.imd.cbm.controllers;
 
+import br.ufrn.imd.cbm.strategies.DiscountOrderStrategy;
 import br.ufrn.imd.cbm.strategies.PaidOrderStrategy;
 import br.ufrn.imd.framework.annotations.AdminOnly;
 import br.ufrn.imd.framework.annotations.AnyAuthed;
 import br.ufrn.imd.framework.dtos.OrderDTO;
 import br.ufrn.imd.framework.exceptions.NotFoundException;
+import br.ufrn.imd.framework.interfaces.OrderStrategy;
 import br.ufrn.imd.framework.models.Order;
 import br.ufrn.imd.framework.models.User;
 import br.ufrn.imd.framework.services.OrderService;
@@ -27,12 +29,25 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<String> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
          try {
-             orderService.createOperationFromOrder(orderService.createOrder(orderDTO, user, paidOrderStrategy));
+             orderService.createOrder(orderDTO, user, paidOrderStrategy);
              return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
          }
          catch (NotFoundException e) {
              return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
          }
+    }
+
+    @AnyAuthed
+    @PostMapping("/discount/{amount}")
+    ResponseEntity<String> createDiscountOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO OrderDTO, @PathVariable double amount) {
+        try {
+            OrderStrategy orderStrategy = new DiscountOrderStrategy(amount);
+            orderService.createOrder(OrderDTO,user,orderStrategy);
+            return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @AnyAuthed

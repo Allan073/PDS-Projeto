@@ -22,8 +22,6 @@ public class OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private ItemService itemService;
-    @Autowired
-    private OperationService operationService;
 
     public Order createOrder(OrderDTO OrderDTO, User user, OrderStrategy orderStrategy) throws NotFoundException, InvalidArgumentException {
         try {
@@ -42,14 +40,6 @@ public class OrderService {
         } catch (NotFoundException | InvalidArgumentException e) {
             throw e;
         }
-    }
-
-    public void createOperationFromOrder(Order order) throws InvalidArgumentException {
-            try {
-                operationService.createFromOrder(order);
-            } catch (InvalidArgumentException e) {
-                throw e;
-            }
     }
 
     public Order findOrderById(Long orderId, User user) throws NotFoundException {

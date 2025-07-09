@@ -36,10 +36,7 @@ public class OperationService {
                 .orElseThrow(() -> new NotFoundException("Transação não encontrada"));
     }
     public void createFromOrder(Order order) throws InvalidArgumentException {
-        try {createOperation(new CreateOperationDto(FinancialMovement.INCOMING,"order " + order.getId(), order.getTotalPrice()));}
-        catch (InvalidArgumentException e) {
-            throw new InvalidArgumentException("Ocorreu um erro na criação da operação atrelada da Order!");
-        }
+
     }
     public List<Operation> findAllOperations() {
         return operationRepository.findAll();
