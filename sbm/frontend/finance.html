@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBM - Finanças</title>
+</head>
+<body onload="loadItems()">
+<button type="button" onclick="createCreationField()">Criar Transação</button>
+<div id="creatediv">
+</div>
+<p>Transações cadastradas:</p>
+<ul id="itemlist"></ul>
+<br>
+<div id="searchdiv">
+    <label for="searchbox">Buscar transação: </label><input id="searchbox">
+    <button type="button" onclick="searchItem()">Buscar</button>
+</div>
+<script src="scripts.js"></script>
+<script>
+    function Transaction(description,amount) {
+        this.description = description
+        this.amount = amount
+    }
+
+    async function loadItems() {
+        const type = 'transactions'
+        const path = 'all'
+        const name = 'id'
+        let list = getTypenameById(type,path).then((data) => {
+            makeList('itemlist',data,name)
+        })
+
+
+    }
+    function searchItem() {
+        //quebrar essa func em pedaços menores depois
+        const ul = document.getElementById('itemlist')
+        const searchbox = document.getElementById('searchbox')
+        const text = searchbox.value
+        const li = document.getElementById('li'+text)
+        const searchdiv = document.getElementById('searchdiv')
+        const id = li.getAttribute('dbid')
+        const type = 'transactions'
+        let searcheditem = document.getElementById('searcheditem')
+        let fetched = getTypenameById(type,id).then((data) => {
+            searcheditem = createSearchedItem(searchdiv,id,data)
+        }).catch()
+    }
+    function submitNew() {
+        const creatediv = document.getElementById('creatediv')
+        const type = 'transactions'
+        let valuelist = readFields(creatediv)
+        postTypename(type,valuelist)
+    }
+
+    function createCreationField() {
+        const dummyItem = new Transaction(null,null,null)
+        const createDiv = document.getElementById('creatediv');
+        addRadio(createDiv,'INCOMING','type')
+        addRadio(createDiv,'OUTGOING','type')
+        for (const key in dummyItem) {
+                addField(createDiv,key)
+        }
+        let submitbutton = document.createElement('button')
+        submitbutton.setAttribute('onclick','submitNew()')
+        submitbutton.innerText = 'Salvar'
+        createDiv.appendChild(submitbutton)
+    }
+</script>
+</body>
+</html>

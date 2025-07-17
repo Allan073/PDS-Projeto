@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBM - Cadastro</title>
+</head>
+<body>
+<div id="signup">
+    <label for="name">Username: </label><input id="name" type="text"> <br>
+    <label for="email">Email: </label><input id="email" type="text"> <br>
+    <label for="password">Senha: </label><input id="password" type="text"> <br>
+    <label for="customer">Cliente</label><input id="customer" type="radio" name="role" value="ROLE_CUSTOMER">
+    <label for="admin">Admin</label><input id="admin" type="radio" name="role" value="ROLE_ADMINISTRATOR"> <br>
+    <button id="submit" type="button" onclick="submitForm()">Signup</button>
+</div>
+<script>
+    function User(name,email,password,role) {
+        this.name = name
+        this.email = email
+        this.password = password
+        this.role = role
+    }
+
+    function submitForm() {
+        const name = document.getElementById("name").value
+        const email = document.getElementById("email").value
+        const passwd = document.getElementById("password").value
+        const role = document.querySelector("input[type='radio'][name=role]:checked").value;
+        let js = new User(name,email,passwd,role)
+        js = JSON.stringify(js)
+        signupRequest(js)
+        console.log(js)
+    }
+
+    async function signupRequest(user) {
+        fetch('http://localhost:8080/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body: user,
+        }).then(response => response.json()).then(data => {
+            console.log('POST Request Data:', data);
+        })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

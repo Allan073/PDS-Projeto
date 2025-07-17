@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBM - Assinaturas</title>
+</head>
+<body onload="loadItems()">
+<p>Assinaturas assinadas:</p>
+<ul id="itemlist"></ul>
+<br>
+<div id="searchdiv">
+    <label for="searchbox">Buscar assinatura: </label><input id="searchbox">
+    <button type="button" onclick="searchItem()">Buscar</button>
+</div>
+<p>Pacotes disponiveis</p>
+<ul id="fulllist"></ul>
+<br>
+<div id="subscriptiontypediv">
+    <label for="subscriptiontypesearchbox">Buscar pacote: </label><input id="subscriptiontypesearchbox">
+    <button type="button" onclick="searchItem()">Buscar</button>
+</div>
+<br>
+<label for="selectfield">Assinar pacote ou cancelar assinatura:</label><input type="text" id="selectfield">
+<button onclick="sign()">Assinar pacote</button>
+<button onclose="cancel()">Cancelar assinatura</button>
+<script src="scripts.js"></script>
+<script>
+
+    async function loadItems() {
+        const type = 'subscription'
+        const path = 'alluser'
+        const name = 'name'
+        let list = getTypenameById(type,path).then((data) => {
+            makeList('itemlist',data,name)
+        })
+
+
+    }
+    function searchItem() {
+        //quebrar essa func em pedaços menores depois
+        const ul = document.getElementById('itemlist')
+        const searchbox = document.getElementById('searchbox')
+        const text = searchbox.value
+        const li = document.getElementById('li'+text)
+        const searchdiv = document.getElementById('searchdiv')
+        const id = li.getAttribute('dbid')
+        const type = 'subscription'
+        let searcheditem = document.getElementById('searcheditem')
+
+        if (searcheditem != null) {
+            searcheditem.remove()
+            searcheditem = null;
+        }
+        let fetched = getTypenameById(type,id).then((data) => {
+            searcheditem = createSearchedItem(searchdiv,id,data)
+        }).catch()
+
+    }
+    function getSubscriptionTypes() {
+        const type = 'subscriptiontype'
+        const path = 'getall'
+        const name = 'id'
+        let list = getTypenameById(type,path).then((data) => {
+            makeList('creationlist',data,name)
+            const ul = document.getElementById('creationlist')
+            const nodelist = ul.childNodes
+            console.log(nodelist)
+            nodelist.forEach((nodelistkey) => {
+                if(nodelistkey.nodeName !== '#text') {
+                    nodelistkey.id = nodelistkey.id.replace('li', 'search')
+                }
+            })
+        }).catch(() => console.log("FALHOU ITENS!"))
+
+    }
+    function sign() {
+        const substype = document.getElementById("selectfield").value
+        const type = "subscription"
+        let valuelist = {}
+        valuelist["subscriptionType"] = substype
+        postTypename(type,valuelist)
+    }
+    function cancel(){
+        const substype = document.getElementById("selectfield").value
+        const type = "subscription"
+        deleteTypenameById(type,substype)
+    }
+</script>
+</body>
+</html>

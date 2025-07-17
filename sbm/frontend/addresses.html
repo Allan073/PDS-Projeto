@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBM - Endereços</title>
+</head>
+<body onload="loadItems()">
+<button type="button" onclick="createCreationField()">Criar Endereço</button>
+<div id="creatediv">
+</div>
+<p>Endereços cadastrados:</p>
+<ul id="itemlist"></ul>
+<br>
+<div id="searchdiv">
+    <label for="searchbox">Buscar endereço: </label><input id="searchbox">
+    <button type="button" onclick="searchItem()">Buscar</button>
+</div>
+<script src="scripts.js"></script>
+<script>
+    function Address(street,complement,number) {
+        this.street = street
+        this.complement = complement
+        this.number = number
+    }
+
+    async function loadItems() {
+        const type = 'address'
+        const path = 'alluser'
+        const name = 'street'
+        let list = getTypenameById(type,path).then((data) => {
+            makeList('itemlist',data,name)
+        })
+
+
+    }
+    function searchItem() {
+        //quebrar essa func em pedaços menores depois
+        const ul = document.getElementById('itemlist')
+        const searchbox = document.getElementById('searchbox')
+        const text = searchbox.value
+        const li = document.getElementById('li'+text)
+        const searchdiv = document.getElementById('searchdiv')
+        const id = li.getAttribute('dbid')
+        const type = 'address'
+        let searcheditem = document.getElementById('searcheditem')
+        let editbutton = document.getElementById('editbutton')
+        let editdiv = document.getElementById('editdiv')
+
+        if (searcheditem != null) {
+            searcheditem.remove()
+            searcheditem = null;
+            editdiv.remove()
+            editdiv = null
+        }
+        let fetched = getTypenameById(type,id).then((data) => {
+            searcheditem = createSearchedItem(searchdiv,id,data)
+        }).catch()
+        if (editbutton == null) {
+            editbutton = createEditButton(searchdiv,type)
+        }
+
+    }
+    function submitNew() {
+        const creatediv = document.getElementById('creatediv')
+        const type = 'address'
+        let valuelist = readFields(creatediv)
+        postTypename(type,valuelist)
+    }
+
+    function createCreationField() {
+        const dummyItem = new Address(null,null,null)
+        const createDiv = document.getElementById('creatediv')
+        const forbiddenfield = ['id','products']
+        for (const key in dummyItem) {
+            if (forbiddenfield.indexOf(key) === -1)
+            addField(createDiv,key)
+        }
+        let submitbutton = document.createElement('button')
+        submitbutton.setAttribute('onclick','submitNew()')
+        submitbutton.innerText = 'Salvar'
+        createDiv.appendChild(submitbutton)
+    }
+</script>
+</body>
+</html>

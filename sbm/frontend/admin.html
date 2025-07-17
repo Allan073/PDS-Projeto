@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBM - Admin</title>
+</head>
+<body>
+<a href="items.html"> Gerenciar itens </a><br>
+<a href="subscriptiontypes.html"> Gerenciar pacotes de assinatura </a><br>
+<a href="finance.html">Gerenciar finanças </a>
+<button type="button" onclick="">Enviar assinaturas manualmente</button>
+<script src="scripts.js"></script>
+<script>
+    function sendSubscriptions(){
+        const name = "subscription"
+        const path = "send"
+        const blank = ""
+        postTypenameById(name,path,blank)
+    }
+</script>
+</body>
+</html>

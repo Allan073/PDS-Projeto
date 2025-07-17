@@ -2,6 +2,8 @@ package br.ufrn.imd.sbm.models;
 
 import br.ufrn.imd.framework.models.AbstractEntity;
 import br.ufrn.imd.framework.models.Item;
+import br.ufrn.imd.framework.serializers.AbstractEntityListSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -27,6 +29,7 @@ public class SubscriptionType extends AbstractEntity {
     private String description;
     @OneToMany
     @Column(nullable = false)
+    @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Item> items = new ArrayList<>();
     @Column(nullable = false)
     private Double price;

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CBM - Usuário</title>
+</head>
+<body onload="findUser()">
+<p id="greeting">Olá</p>
+<a href="addresses.html">Gerenciar Endereços</a>
+<a href="order.html">Gerenciar Pedidos</a>
+<a href="subscriptions.html">Gerenciar Pedidos</a>
+
+<button type="button" id="deletebutton" onclick="deleteAccount()">Deletar Conta</button>
+
+<script src ='scripts.js'></script>
+<script>
+    function findUser() {
+        const greeting = document.getElementById('greeting')
+        let user = getSelf().then((data) => {
+            greeting.innerText = 'Olá, ' + data.name;
+        }).catch(() => {
+            console.log("caiu!")})
+    }
+
+    function deleteAccount() {
+        if (window.confirm("Sua conta será deletada")) {
+            deleteTypenameById('users','self')
+        }
+    }
+
+</script>
+</body>
+</html>

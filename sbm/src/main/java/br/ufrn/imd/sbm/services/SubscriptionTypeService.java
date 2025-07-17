@@ -1,5 +1,6 @@
 package br.ufrn.imd.sbm.services;
 
+import br.ufrn.imd.framework.exceptions.InvalidArgumentException;
 import br.ufrn.imd.framework.exceptions.NotFoundException;
 import br.ufrn.imd.framework.models.Item;
 import br.ufrn.imd.framework.services.ItemService;
@@ -18,7 +19,13 @@ public class SubscriptionTypeService {
     @Autowired
     private ItemService itemService;
 
-    public void createSubscriptionType(SubscriptionTypeDTO subscriptionTypeDTO) throws NotFoundException {
+    public void createSubscriptionType(SubscriptionTypeDTO subscriptionTypeDTO) throws NotFoundException, InvalidArgumentException {
+        if (subscriptionTypeDTO == null) {
+            throw new InvalidArgumentException("Corpo do request nulo!");
+        }
+        if (subscriptionTypeDTO.name() == null || subscriptionTypeDTO.name().isEmpty()) {
+            throw new InvalidArgumentException("Tipos de assinatura devem possuir nome!");
+        }
         try {
             List<Item> items = itemService.findAllById(subscriptionTypeDTO.items());
             SubscriptionType subscriptionType = SubscriptionType.builder()
