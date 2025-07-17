@@ -4,10 +4,7 @@ import br.ufrn.imd.framework.models.AbstractEntity;
 import br.ufrn.imd.framework.models.Item;
 import br.ufrn.imd.framework.serializers.AbstractEntityListSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,10 +24,10 @@ public class SubscriptionType extends AbstractEntity {
     private String name;
     @Column(nullable = false)
     private String description;
-    @OneToMany
+    @OneToMany(orphanRemoval = true,cascade = CascadeType.ALL, mappedBy = "id")
     @Column(nullable = false)
     @JsonSerialize(using = AbstractEntityListSerializer.class)
-    private List<Item> items = new ArrayList<>();
+    private List<Item> items;
     @Column(nullable = false)
     private Double price;
     @Column(nullable = false)

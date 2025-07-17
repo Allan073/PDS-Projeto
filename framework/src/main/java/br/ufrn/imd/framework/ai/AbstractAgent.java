@@ -26,6 +26,7 @@ public abstract class AbstractAgent<Type> {
         ObjectMapper mapper = new ObjectMapper();
 
         StringBuilder prompt = new StringBuilder();
+        promptBuilderMap(map,prompt);
         promptBuilderTotals(totals, prompt);
         promptBuilderList(list, prompt);
         String finalPrompt = prompt.toString();
@@ -40,7 +41,7 @@ public abstract class AbstractAgent<Type> {
 
     protected void queryAI(String finalPrompt, ObjectMapper mapper, HttpClient client) {
         Map<String, Object> map = Map.of(
-            "model", "nousresearch/deephermes-3-mistral-24b-preview:free",
+            "model", "mistralai/mistral-small-3.2-24b-instruct",
             "messages", List.of(
                 Map.of(
                     "role","user",

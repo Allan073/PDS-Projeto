@@ -7,10 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode(callSuper = false)
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
@@ -46,10 +45,11 @@ public class Order extends AbstractEntity {
     @Column(nullable = false)
     private Double totalPrice;
 
-    @OneToMany
+
+    @OneToMany(orphanRemoval = true,cascade = CascadeType.ALL, mappedBy = "id")
     @Column(nullable = false)
     @JsonSerialize(using = AbstractEntityListSerializer.class)
-    private List<Item> items = new ArrayList<>();
+    private List<Item> items;
 
     public User getUser() {
         return user;

@@ -12,29 +12,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DiscountOrderStrategy implements OrderStrategy {
-    private double discount;
+    private int discount=20;
 
     @Autowired
     private OperationService operationService;
-
-    public DiscountOrderStrategy() {
-    }
-
-    public DiscountOrderStrategy(double discount) {
-        this.discount = discount;
-    }
 
     @Override
     public void payment(Order order) throws NotFoundException {
         try {
             operationService.createOperation(
                     new CreateOperationDto(FinancialMovement.INCOMING,
-                            "order " + order.getId() + " desconto: " + discount*100 +"%",
-                            order.getTotalPrice()-order.getTotalPrice()*discount)
+                            "order " + order.getId() + " desconto: " + discount +"%",
+                            order.getTotalPrice()-order.getTotalPrice()*discount/100)
             );
         }
         catch (InvalidArgumentException e) {
             throw e;
         }
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
 }

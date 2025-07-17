@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>SBM - Assinaturas</title>
 </head>
-<body onload="loadItems()">
+<body onload="loadItems();getSubscriptionTypes()">
 <p>Assinaturas assinadas:</p>
 <ul id="itemlist"></ul>
 <br>
@@ -17,19 +17,19 @@
 <br>
 <div id="subscriptiontypediv">
     <label for="subscriptiontypesearchbox">Buscar pacote: </label><input id="subscriptiontypesearchbox">
-    <button type="button" onclick="searchItem()">Buscar</button>
+    <button type="button" onclick="searchItem2()">Buscar</button>
 </div>
 <br>
 <label for="selectfield">Assinar pacote ou cancelar assinatura:</label><input type="text" id="selectfield">
 <button onclick="sign()">Assinar pacote</button>
-<button onclose="cancel()">Cancelar assinatura</button>
+<button onclick="cancel()">Cancelar assinatura</button>
 <script src="scripts.js"></script>
 <script>
 
     async function loadItems() {
         const type = 'subscription'
         const path = 'alluser'
-        const name = 'name'
+        const name = 'id'
         let list = getTypenameById(type,path).then((data) => {
             makeList('itemlist',data,name)
         })
@@ -56,13 +56,35 @@
         }).catch()
 
     }
+
+    function searchItem2() {
+        //quebrar essa func em pedaços menores depois
+        const ul = document.getElementById('fulllist')
+        const searchbox = document.getElementById('subscriptiontypesearchbox')
+        const text = searchbox.value
+        const li = document.getElementById('search'+text)
+        const searchdiv = document.getElementById('subscriptiontypediv')
+        const id = li.getAttribute('dbid')
+        const type = 'subscriptiontype'
+        let searcheditem = document.getElementById('searcheditem')
+
+        if (searcheditem != null) {
+            searcheditem.remove()
+            searcheditem = null;
+        }
+        let fetched = getTypenameById(type,id).then((data) => {
+            searcheditem = createSearchedItem(searchdiv,id,data)
+        }).catch()
+
+    }
+
     function getSubscriptionTypes() {
         const type = 'subscriptiontype'
-        const path = 'getall'
+        const path = 'all'
         const name = 'id'
         let list = getTypenameById(type,path).then((data) => {
-            makeList('creationlist',data,name)
-            const ul = document.getElementById('creationlist')
+            makeList('fulllist',data,name)
+            const ul = document.getElementById('fulllist')
             const nodelist = ul.childNodes
             console.log(nodelist)
             nodelist.forEach((nodelistkey) => {
@@ -78,6 +100,7 @@
         const type = "subscription"
         let valuelist = {}
         valuelist["subscriptionType"] = substype
+        valuelist = JSON.stringify(valuelist)
         postTypename(type,valuelist)
     }
     function cancel(){

@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"br.ufrn.imd.framework","br.ufrn.imd.sbm"})
-@EntityScan(basePackages = {"br.ufrn.imd.framework","br.ufrn.imd.cbm"})
+@EntityScan(basePackages = {"br.ufrn.imd.framework","br.ufrn.imd.sbm"})
 @EnableJpaRepositories(basePackages = {"br.ufrn.imd.framework","br.ufrn.imd.sbm"})
 @EnableScheduling
 class SbmApplication {

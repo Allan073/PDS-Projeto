@@ -13,7 +13,7 @@ public class Stock extends AbstractEntity{
 
     @Column(nullable=false) //supondo que isso é a quantidade total de itens, não seria melhor fazer disso um derivado?
     private int quantityItems;
-    @OneToMany //Mesma coisa que eu falei sobre arrays em Recipe
+    @OneToMany(orphanRemoval = true) //Mesma coisa que eu falei sobre arrays em Recipe
     @Column(nullable=false)
     private List<Item> items;
 

@@ -107,6 +107,24 @@
         postTypename(type,valuelist)
     }
 
+    function submitDiscount() {
+        const creatediv = document.getElementById('creatediv')
+        const type = 'orders'
+        const path = 'discount/20'
+        const itemlist = document.getElementById('selecteditems').childNodes
+        const items = []
+        itemlist.forEach((nodelistkey) => {
+            if(nodelistkey.nodeName !== '#text') {
+                items.push(Number(nodelistkey.getAttribute('dbid')))
+            }
+        })
+        let valuelist = readFields(creatediv)
+        let unjsond = JSON.parse(valuelist)
+        unjsond['items'] = items
+        valuelist = JSON.stringify(unjsond)
+        postTypenameById(type,path,valuelist)
+    }
+
     function createCreationField() {
         getItems()
         document.getElementById('itemssection').style.display = 'block';
@@ -122,7 +140,11 @@
         let submitbutton = document.createElement('button')
         submitbutton.setAttribute('onclick','submitNew()')
         submitbutton.innerText = 'Salvar'
+        let discountbutton = document.createElement('button')
+        discountbutton.setAttribute('onClick','submitDiscount()')
+        discountbutton.innerText = 'Salvar com 20% off'
         createDiv.appendChild(submitbutton)
+        createDiv.appendChild(discountbutton)
     }
 
     function addToSelectedList() {

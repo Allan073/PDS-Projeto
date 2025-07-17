@@ -6,7 +6,7 @@
 </head>
 <body onload="loadItems();getItems()">
 <div id="creatediv">
-    <p>Criar um item:</p>
+    <p>Criar uma assinatura:</p>
     <input type="text" id="name" placeholder="name">
     <input type="text" id="description" placeholder="description">
     <input type="text" id="price" placeholder="price">
@@ -81,7 +81,7 @@
     }
     function getItems() {
         const type = 'items'
-        const path = 'orderable'
+        const path = 'all'
         const name = 'id'
         let list = getTypenameById(type,path).then((data) => {
             makeList('creationlist',data,name)

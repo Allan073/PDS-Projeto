@@ -25,6 +25,7 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private PaidOrderStrategy paidOrderStrategy;
+    @Autowired private DiscountOrderStrategy discountOrderStrategy;
     @AnyAuthed
     @PostMapping
     public ResponseEntity<String> createOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO orderDTO) {
@@ -39,10 +40,10 @@ public class OrderController {
 
     @AnyAuthed
     @PostMapping("/discount/{amount}")
-    ResponseEntity<String> createDiscountOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO OrderDTO, @PathVariable double amount) {
+    ResponseEntity<String> createDiscountOrder(@AuthenticationPrincipal User user, @RequestBody OrderDTO OrderDTO, @PathVariable int amount) {
         try {
-            OrderStrategy orderStrategy = new DiscountOrderStrategy(amount);
-            orderService.createOrder(OrderDTO,user,orderStrategy);
+            discountOrderStrategy.setDiscount(amount);
+            orderService.createOrder(OrderDTO,user,discountOrderStrategy);
             return new ResponseEntity<>("Item criado com sucesso", HttpStatus.CREATED);
         }
         catch (NotFoundException e) {

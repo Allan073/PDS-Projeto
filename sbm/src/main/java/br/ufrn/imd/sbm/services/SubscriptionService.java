@@ -34,8 +34,10 @@ public class SubscriptionService {
                     .userSubscriptions(userSubscriptions)
                     .lastSent(LocalDate.now())
                     .build();
-            subscriptionRepository.save(subscription);
             userSubscriptions.getSubscriptions().add(subscription);
+            subscriptionRepository.save(subscription);
+            userSubscriptionsService.addSubscription(userSubscriptions,subscription);
+
         } catch (NotFoundException e) {
             throw e;
         }
@@ -51,6 +53,8 @@ public class SubscriptionService {
         Subscription subscription = null;
         try {
             subscription = findSubscriptionById(id,user);
+            UserSubscriptions userSubscriptions = userSubscriptionsService.findUserSubscriptionsByUserId(user.getId());
+            userSubscriptionsService.removeSubscription(userSubscriptions,subscription);
             subscriptionRepository.delete(subscription);
         } catch (NotFoundException e) {
             throw e;

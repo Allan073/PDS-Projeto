@@ -4,24 +4,7 @@
     <meta charset="UTF-8">
     <title>SBM - Pedidos</title>
 </head>
-<style type="text/css">
-    div.itemsection {display:none}
-</style>
 <body onload="loadItems()">
-<button type="button" onclick="createCreationField()">Criar Pedido</button>
-<div id="creatediv">
-    <div id="itemssection" class="itemsection">
-        <p>Itens disponíveis:</p>
-        <ul id="creationlist" class="creationlist">
-        </ul>
-        <div>
-            <label for="selectitemtext">Selecione um item:</label><input type="text" id="selectitemtext">
-            <button type="button" onclick="addToSelectedList()">Adicionar Item</button>
-        </div>
-        <p>Itens selecionados:</p>
-        <ul id="selecteditems"></ul>
-    </div>
-</div>
 <p>Pedidos cadastrados:</p>
 <ul id="itemlist"></ul>
 <br>
@@ -44,23 +27,6 @@
             makeList('itemlist',data,name)
         }).catch(() => console.log("CAIU!"))
     }
-    function getItems() {
-        const type = 'items'
-        const path = 'orderable'
-        const name = 'id'
-        let list = getTypenameById(type,path).then((data) => {
-            makeList('creationlist',data,name)
-            const ul = document.getElementById('creationlist')
-            const nodelist = ul.childNodes
-            console.log(nodelist)
-            nodelist.forEach((nodelistkey) => {
-                if(nodelistkey.nodeName !== '#text') {
-                    nodelistkey.id = nodelistkey.id.replace('li', 'search')
-                }
-            })
-        }).catch(() => console.log("FALHOU ITENS!"))
-
-    }
 
     function searchItem() {
         //quebrar essa func em pedaços menores depois
@@ -73,64 +39,15 @@
         const type = 'orders'
         const otherfunc = 'createAddItemField(\'' + type +'\');'
         let searcheditem = document.getElementById('searcheditem')
-        let editbutton = document.getElementById('editbutton')
-        let editdiv = document.getElementById('editdiv')
 
         if (searcheditem != null) {
             searcheditem.remove()
             searcheditem = null;
-            editdiv.remove()
-            editdiv = null
         }
         let fetched = getTypenameById(type,id).then((data) => {
             searcheditem = createSearchedItem(searchdiv,id,data)
         }).catch()
-        if (editbutton == null) {
-            editbutton = createEditButton(searchdiv,type,otherfunc)
-        }
 
-    }
-    function submitNew() {
-        const creatediv = document.getElementById('creatediv')
-        const type = 'orders'
-        const itemlist = document.getElementById('selecteditems').childNodes
-        const items = []
-        itemlist.forEach((nodelistkey) => {
-            if(nodelistkey.nodeName !== '#text') {
-                items.push(Number(nodelistkey.getAttribute('dbid')))
-            }
-        })
-        let valuelist = readFields(creatediv)
-        let unjsond = JSON.parse(valuelist)
-        unjsond['items'] = items
-        valuelist = JSON.stringify(unjsond)
-        postTypename(type,valuelist)
-    }
-
-    function createCreationField() {
-        getItems()
-        document.getElementById('itemssection').style.display = 'block';
-        const dummyItem = new Order(null,null)
-        const createDiv = document.getElementById('creatediv')
-        const forbiddenfield = ['id','items']
-        if (createDiv.getAttribute('created') != null) return;
-        createDiv.setAttribute('created','true')
-        for (const key in dummyItem) {
-            if (forbiddenfield.indexOf(key) === -1)
-                addField(createDiv,key)
-        }
-        let submitbutton = document.createElement('button')
-        submitbutton.setAttribute('onclick','submitNew()')
-        submitbutton.innerText = 'Salvar'
-        createDiv.appendChild(submitbutton)
-    }
-
-    function addToSelectedList() {
-        const to = document.getElementById('selecteditems')
-        const searchbox = document.getElementById('selectitemtext')
-        const text = searchbox.value
-        const li = document.getElementById('search' + text)
-        to.appendChild(li)
     }
 </script>
 </body>

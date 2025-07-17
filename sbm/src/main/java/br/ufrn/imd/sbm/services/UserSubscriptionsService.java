@@ -1,6 +1,7 @@
 package br.ufrn.imd.sbm.services;
 
 import br.ufrn.imd.framework.models.User;
+import br.ufrn.imd.sbm.models.Subscription;
 import br.ufrn.imd.sbm.models.UserSubscriptions;
 import br.ufrn.imd.sbm.repositories.UserSubscriptionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,16 @@ public class UserSubscriptionsService {
     }
     public UserSubscriptions findUserSubscriptionsByUserId(Long userId) {
         return userSubscriptionsRepository.findByUser_Id(userId);
+    }
+
+    public void addSubscription(UserSubscriptions userSubscriptions, Subscription subscription) {
+        userSubscriptions.getSubscriptions().add(subscription);
+        userSubscriptionsRepository.save(userSubscriptions);
+    }
+
+    public void removeSubscription(UserSubscriptions userSubscriptions, Subscription subscription) {
+        userSubscriptions.getSubscriptions().remove(subscription);
+        userSubscriptionsRepository.save(userSubscriptions);
     }
 
     public void deleteUserSubscriptions(Long userId) {

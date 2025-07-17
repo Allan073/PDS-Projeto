@@ -23,20 +23,22 @@ public class OrderService {
     @Autowired
     private ItemService itemService;
 
-    public Order createOrder(OrderDTO OrderDTO, User user, OrderStrategy orderStrategy) throws NotFoundException, InvalidArgumentException {
+    public void createOrder(OrderDTO OrderDTO, User user, OrderStrategy orderStrategy) throws NotFoundException, InvalidArgumentException {
         try {
-            ArrayList<Item> items = new ArrayList<>(itemService.findAllById(OrderDTO.items()));
+            ArrayList<Item> items = (ArrayList<Item>) itemService.findAllById(OrderDTO.items());
             Order newOrder = Order.builder()
                     .user(user)
                     .orderDate(LocalDate.now())
                     .description(OrderDTO.description())
-                    .items(items)
+                    .items(new ArrayList<>())
                     .orderState(DeliveryState.ORDER_REQUESTED)
                     .totalPrice(calcTotalPrice(items))
                     .build();
+            for (Item item : items) {
+                newOrder.getItems().add(item);
+            }
             orderRepository.save(newOrder);
             orderStrategy.payment(newOrder);
-            return newOrder;
         } catch (NotFoundException | InvalidArgumentException e) {
             throw e;
         }

@@ -1,9 +1,6 @@
 package br.ufrn.imd.framework.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -19,7 +16,7 @@ public class Recipe extends AbstractEntity {
 
     @Column (nullable = false)
     private String name;
-    @OneToMany //Note: OneToMany não aceita arrays.
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL) //Note: OneToMany não aceita arrays.
     @Column (nullable = false)
     private List<Item> items;
     @Column (nullable = false)

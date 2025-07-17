@@ -17,13 +17,13 @@ public class SubscriptionReportService {
     public void generateSubscriptionReport() {
         Map<SubscriptionType,Double> summedPrices = new HashMap<>();
         List<SubscriptionType> subscriptionTypes = subscriptionTypeService.findAllSubscriptionTypes();
-        Double totalIncoming = 0.0;
-        Long totalSubscriptions = 0L;
-        Double totalAvg = 0.0;
+        double totalIncoming = 0.0;
+        long totalSubscriptions = 0L;
+        double totalAvg = 0.0;
         for (SubscriptionType subscriptionType : subscriptionTypes) {
             Long subscriptionTypeCount = subscriptionService.countBySubscriptionType(subscriptionType);
-            summedPrices.put(subscriptionType, subscriptionTypeCount*subscriptionType.getPrice());
-            totalIncoming += subscriptionTypeCount*subscriptionType.getPrice();
+            summedPrices.put(subscriptionType, subscriptionTypeCount*subscriptionType.getPrice()*(30.0/subscriptionType.getFrequency()));
+            totalIncoming += subscriptionTypeCount*subscriptionType.getPrice()*(30.0/subscriptionType.getFrequency());
             totalSubscriptions += subscriptionTypeCount;
         }
         totalAvg = totalIncoming/totalSubscriptions;
